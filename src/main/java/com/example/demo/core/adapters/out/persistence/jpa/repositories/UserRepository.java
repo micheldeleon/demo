@@ -9,7 +9,7 @@ import com.example.demo.core.adapters.out.persistence.jpa.entities.UserEntity;
 import com.example.demo.core.adapters.out.persistence.jpa.interfaces.UserRepositoryJpa;
 import com.example.demo.core.adapters.out.persistence.jpa.mappers.UserMapper;
 import com.example.demo.core.domain.models.User;
-import com.example.demo.core.ports.UserRepositoryPort;
+import com.example.demo.core.ports.out.UserRepositoryPort;
 
 @Repository
 public class UserRepository implements UserRepositoryPort {

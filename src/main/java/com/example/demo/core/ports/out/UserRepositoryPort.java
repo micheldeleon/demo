@@ -1,4 +1,4 @@
-package com.example.demo.core.ports;
+package com.example.demo.core.ports.out;
 
 
 import com.example.demo.core.domain.models.User;

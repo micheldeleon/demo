@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.core.domain.models.User;
-import com.example.demo.core.ports.ListUsersPort;
-import com.example.demo.core.ports.UserRepositoryPort;
+import com.example.demo.core.ports.in.ListUsersPort;
+import com.example.demo.core.ports.out.UserRepositoryPort;
 @Service
 public class ListUsersUseCase implements ListUsersPort{
     private final UserRepositoryPort userRepository;

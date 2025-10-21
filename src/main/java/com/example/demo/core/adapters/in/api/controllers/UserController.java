@@ -1,4 +1,4 @@
-package com.example.demo.api.controllers;
+package com.example.demo.core.adapters.in.api.controllers;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.core.domain.models.User;
-import com.example.demo.core.ports.ListUsersPort;
+import com.example.demo.core.ports.in.ListUsersPort;
 
 
 @RestController
