@@ -1,4 +1,4 @@
-package com.example.demo.core.adapters.out.persistence.jpa.entities;
+package com.example.demo.adapters.out.persistence.jpa.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +20,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;    
-
     private String email;
+
+    private String password;
 }

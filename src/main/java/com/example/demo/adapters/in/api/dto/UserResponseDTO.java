@@ -1,4 +1,4 @@
-package com.example.demo.core.domain.models;
+package com.example.demo.adapters.in.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserResponseDTO {
     private Long id;
     private String email;
-    private String password;
 }
