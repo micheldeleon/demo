@@ -1,5 +1,9 @@
 package com.example.demo.core.adapters.out.persistence.jpa.interfaces;
 
-public interface UserRepositoryJpa {
+import org.springframework.data.repository.CrudRepository;
+
+import com.example.demo.core.adapters.out.persistence.jpa.entities.UserEntity;
+
+public interface UserRepositoryJpa extends CrudRepository<UserEntity, Long> {
 
 }
