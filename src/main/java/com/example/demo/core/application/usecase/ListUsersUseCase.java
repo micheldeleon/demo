@@ -17,4 +17,5 @@ public class ListUsersUseCase implements ListUsersPort{
     public List<User> listUsers() {
         return userRepository.findAll();
     }
+    
 }
