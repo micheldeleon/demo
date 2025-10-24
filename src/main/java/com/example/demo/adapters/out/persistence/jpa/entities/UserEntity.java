@@ -1,5 +1,6 @@
 package com.example.demo.adapters.out.persistence.jpa.entities;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -27,9 +28,13 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name; // nombre
+    private String lastName; // apellido
     private String email;
-
     private String password;
+    private Date dateOfBirth; // fechaNacimiento
+    private String nationalId; // ci
+    private String phoneNumber; // celular
 
     @ManyToMany
     @JoinTable(

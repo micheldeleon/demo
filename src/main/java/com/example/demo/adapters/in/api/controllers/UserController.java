@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.adapters.in.api.dto.UserRegisterDto;
 import com.example.demo.adapters.in.api.dto.UserResponseDTO;
+import com.example.demo.adapters.in.api.mappers.UserMapperDtos;
 import com.example.demo.core.domain.models.User;
 import com.example.demo.core.ports.in.ListUsersPort;
+import com.example.demo.core.ports.in.RegisterUserPort;
 
 import jakarta.validation.Valid;
 
@@ -22,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/users")
 public class UserController {
     private final ListUsersPort listUsersPort;
+    private final RegisterUserPort registerUserPort;
 
-    public UserController(ListUsersPort listUsersPort) {
+    public UserController(ListUsersPort listUsersPort, RegisterUserPort registerUserPort) {
         this.listUsersPort = listUsersPort;
+        this.registerUserPort = registerUserPort;
     }
 
     @GetMapping
@@ -37,8 +41,13 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDto entity) {
+        try{
+            registerUserPort.registerUser(UserMapperDtos.toDomain(entity));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         
-        return ResponseEntity.ok(entity);
     }
 
 }
