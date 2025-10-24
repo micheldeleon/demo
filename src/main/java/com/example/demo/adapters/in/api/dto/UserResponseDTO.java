@@ -7,10 +7,17 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class UserResponseDTO {
     @NotBlank
     private Long id;
     @NotBlank
     private String email;
+    @NotBlank
+    private String fullName;
+
+    public UserResponseDTO(Long id, String email, String name, String lastName) {
+        this.id = id;
+        this.email = email;
+        this.fullName = name + " " + lastName;
+    }
 }

@@ -40,7 +40,7 @@ public class UserController {
     public List<UserResponseDTO> getAllUsers() {
         List<User> users = listUsersPort.listUsers();
         return users.stream()
-                .map(u -> new UserResponseDTO(u.getId(), u.getEmail()))
+                .map(UserMapperDtos::toResponseDto)
                 .collect(Collectors.toList());
     }// mover mapeo
 
