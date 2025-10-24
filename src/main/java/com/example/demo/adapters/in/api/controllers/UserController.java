@@ -22,7 +22,6 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -46,23 +45,23 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDto entity) {
-        try{
+        try {
             registerUserPort.registerUser(UserMapperDtos.toDomain(entity));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        
+
     }
+
     @GetMapping("/login")
-    public String getMethodName(@Valid@RequestBody UserLoginDto userLoginDto) {
-        try{
+    public String getMethodName(@Valid @RequestBody UserLoginDto userLoginDto) {
+        try {
             loginUserPort.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
             return "Login successful for user: " + userLoginDto.getEmail();
         } catch (Exception e) {
             return "Login failed: " + e.getMessage();
         }
     }
-    
 
 }

@@ -3,7 +3,7 @@ package com.example.demo.adapters.out.persistence.jpa.entities;
 import java.util.Date;
 import java.util.List;
 
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,18 +30,16 @@ public class UserEntity {
 
     private String name; // nombre
     private String lastName; // apellido
+    @Column(unique = true) // email
     private String email;
     private String password;
     private Date dateOfBirth; // fechaNacimiento
+    @Column(unique = true)
     private String nationalId; // ci
     private String phoneNumber; // celular
 
     @ManyToMany
-    @JoinTable(
-        name = "users_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id"),
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"})
-    )
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"), uniqueConstraints = @UniqueConstraint(columnNames = {
+            "user_id", "role_id" }))
     private List<RoleEntity> roles;
 }
