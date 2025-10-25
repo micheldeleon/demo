@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.adapters.out.persistence.jpa.entities.UserEntity;
 import com.example.demo.adapters.out.persistence.jpa.interfaces.UserRepositoryJpa;
 
+
+
 import io.jsonwebtoken.lang.Collections;
 
 @Service
@@ -59,7 +61,6 @@ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundEx
         authorities
     );
 }
-
 
 
 }
