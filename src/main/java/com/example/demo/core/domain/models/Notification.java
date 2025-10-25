@@ -1,5 +1,6 @@
 package com.example.demo.core.domain.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -14,5 +15,6 @@ public class Notification { // Notificacion
     private User user;     // usuario
     private String message; // mensaje
     private Date date;     // fecha
+    private LocalDateTime readAt;
 }
 
