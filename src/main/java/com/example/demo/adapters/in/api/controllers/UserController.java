@@ -3,12 +3,12 @@ package com.example.demo.adapters.in.api.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.adapters.in.api.dto.UserLoginDto;
 import com.example.demo.adapters.in.api.dto.UserRegisterDto;
 import com.example.demo.adapters.in.api.dto.UserResponseDTO;
 import com.example.demo.adapters.in.api.mappers.UserMapperDtos;
@@ -27,12 +27,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
     private final ListUsersPort listUsersPort;
     private final RegisterUserPort registerUserPort;
-    private final LoginUserPort loginUserPort;
 
-    public UserController(ListUsersPort listUsersPort, RegisterUserPort registerUserPort, LoginUserPort loginUserPort) {
+    public UserController(ListUsersPort listUsersPort, RegisterUserPort registerUserPort) {
         this.listUsersPort = listUsersPort;
         this.registerUserPort = registerUserPort;
-        this.loginUserPort = loginUserPort;
     }
 
     @GetMapping
@@ -54,14 +52,13 @@ public class UserController {
 
     }
 
-    @GetMapping("/login")
-    public String getMethodName(@Valid @RequestBody UserLoginDto userLoginDto) {
-        try {
-            loginUserPort.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
-            return "Login successful for user: " + userLoginDto.getEmail();
-        } catch (Exception e) {
-            return "Login failed: " + e.getMessage();
-        }
-    }
+    // public ResponseEntity<?> login(@Valid @RequestBody UserLoginDto userLoginDto) {
+    //     try {
+    //         loginUserPort.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+    //         return ResponseEntity.ok("Login successful for user: " + userLoginDto.getEmail());
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body("Login failed: " + e.getMessage());
+    //     }
+    // }
 
 }

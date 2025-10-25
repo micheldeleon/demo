@@ -1,5 +1,7 @@
 package com.example.demo.adapters.out.persistence.jpa.interfaces;
 
+import java.util.Optional;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.example.demo.adapters.out.persistence.jpa.entities.UserEntity;
