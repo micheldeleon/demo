@@ -45,7 +45,10 @@ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundEx
     return new org.springframework.security.core.userdetails.User(
         u.getEmail(),
         u.getPassword(),
-        true, true, true, true,
+        true,
+        true, 
+        true, 
+        true,
         authorities
     );
 }
