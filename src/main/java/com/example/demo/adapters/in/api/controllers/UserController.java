@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.adapters.in.api.dto.UserLoginDto;
 import com.example.demo.adapters.in.api.dto.UserRegisterDto;
 import com.example.demo.adapters.in.api.dto.UserResponseDTO;
 import com.example.demo.adapters.in.api.mappers.UserMapperDtos;
@@ -28,12 +27,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
     private final ListUsersPort listUsersPort;
     private final RegisterUserPort registerUserPort;
-    private final LoginUserPort loginUserPort;
 
-    public UserController(ListUsersPort listUsersPort, RegisterUserPort registerUserPort, LoginUserPort loginUserPort) {
+    public UserController(ListUsersPort listUsersPort, RegisterUserPort registerUserPort) {
         this.listUsersPort = listUsersPort;
         this.registerUserPort = registerUserPort;
-        this.loginUserPort = loginUserPort;
     }
 
     @GetMapping

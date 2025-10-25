@@ -7,8 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.demo.adapters.in.api.dto.UserLoginDto;
-import com.example.demo.adapters.out.persistence.jpa.entities.UserEntity;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,32 +28,35 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
     private static final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
     private static final String PREFIX_TOKEN = "Bearer ";
     private static final String HEADER_AUTHORIZATION = "Authorization";
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
+        setAuthenticationManager(authenticationManager);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        // TODO Auto-generated method stub
-        UserLoginDto user = null;
+        Map<String, String> credentials = new HashMap<>();
         String username = null;
         String password = null;
         try {
-            user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
-            username = user.getEmail();
-            password = user.getPassword();
+            credentials = new ObjectMapper().readValue(request.getInputStream(), HashMap.class);
+            username = credentials.getOrDefault("email", credentials.get("username"));
+            password = credentials.get("password");
         } catch (StreamReadException e) {
             e.printStackTrace();
         } catch (DatabindException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if (username == null || password == null) {
+            throw new IllegalArgumentException("Username or password missing");
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
                 password);
