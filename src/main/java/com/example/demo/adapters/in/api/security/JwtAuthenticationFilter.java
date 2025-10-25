@@ -4,12 +4,17 @@ import javax.crypto.SecretKey;
 
 import java.util.Collection;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.demo.adapters.in.api.dto.UserLoginDto;
+import com.example.demo.adapters.out.persistence.jpa.entities.UserEntity;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.IOException;
@@ -29,30 +34,57 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private static final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
     private static final String PREFIX_TOKEN = "Bearer ";
     private static final String HEADER_AUTHORIZATION = "Authorization";
-    
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
     @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
+        // TODO Auto-generated method stub
+        UserLoginDto user = null;
+        String username = null;
+        String password = null;
+        try {
+            user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
+            username = user.getEmail();
+            password = user.getPassword();
+        } catch (StreamReadException e) {
+            e.printStackTrace();
+        } catch (DatabindException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
+                password);
+        return authenticationManager.authenticate(authenticationToken);
+    }
+
+    @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
-        User user = (User) authResult.getPrincipal();
-        Collection<? extends GrantedAuthority> roles = user.getAuthorities();
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authResult
+                .getPrincipal();
         String username = user.getUsername();
+        Collection<? extends GrantedAuthority> roles = user.getAuthorities();
+        Claims claims = Jwts.claims()
+                .add("authorities", roles)
+                .build();
+
         String token = Jwts.builder()
                 .subject(username)
-                .claim("roles", roles)
+                .claims(claims)
                 .expiration(timer())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .signWith(SECRET_KEY)
                 .compact();
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
         Map<String, String> body = new HashMap<>();
         body.put("token", token);
         body.put("username", username);
-        body.put("message", "Authentication successful");
+        body.put("message", String.format("User %s logged in successfully", username));
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -63,5 +95,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Date date = new Date(System.currentTimeMillis() + oneDayInMs);
         return date;
     }
+       @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException, ServletException {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", "Error en la autenticacion username o password incorrectos!");
+        body.put("error", failed.getMessage());
+
+        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
+        response.setStatus(401);
+        response.setContentType("application/json");
+    }
+
 
 }

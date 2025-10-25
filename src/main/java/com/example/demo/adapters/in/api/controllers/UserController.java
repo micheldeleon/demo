@@ -3,6 +3,7 @@ package com.example.demo.adapters.in.api.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,14 +55,13 @@ public class UserController {
 
     }
 
-    @GetMapping("/login")
-    public String getMethodName(@Valid @RequestBody UserLoginDto userLoginDto) {
-        try {
-            loginUserPort.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
-            return "Login successful for user: " + userLoginDto.getEmail();
-        } catch (Exception e) {
-            return "Login failed: " + e.getMessage();
-        }
-    }
+    // public ResponseEntity<?> login(@Valid @RequestBody UserLoginDto userLoginDto) {
+    //     try {
+    //         loginUserPort.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+    //         return ResponseEntity.ok("Login successful for user: " + userLoginDto.getEmail());
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body("Login failed: " + e.getMessage());
+    //     }
+    // }
 
 }
