@@ -31,7 +31,7 @@
         <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency> -->
 
-	
+	<!-- SUPABASE CONFIG -->
     <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
