@@ -16,4 +16,6 @@ public class Match { // Duelo
     private Round round;
     private LocalDateTime scheduledAt;
     private String status;
+    private Team homeTeam;
+    private Team awayTeam;
 }

@@ -1,5 +1,6 @@
 package com.example.demo.core.domain.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -16,5 +17,6 @@ public class Registration { // Inscripcion
     private Date date;           // fecha
     private Payment payment;     // pago
     private String status;       // estado
+    private LocalDateTime registeredAt;
 }
 
