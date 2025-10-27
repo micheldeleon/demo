@@ -1,5 +1,6 @@
 package com.example.demo.core.domain.models;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ public class Team { // Equipo
     private List<Participant> participants; // participantes
     private User creator; // creador
     //Fecha de creacion 
+    private LocalDateTime createdAt;
     //Si vemos mas datos que pueden llegar a ir
 }
 
