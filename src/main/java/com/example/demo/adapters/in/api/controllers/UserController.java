@@ -52,13 +52,5 @@ public class UserController {
 
     }
 
-    // public ResponseEntity<?> login(@Valid @RequestBody UserLoginDto userLoginDto) {
-    //     try {
-    //         loginUserPort.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
-    //         return ResponseEntity.ok("Login successful for user: " + userLoginDto.getEmail());
-    //     } catch (Exception e) {
-    //         return ResponseEntity.badRequest().body("Login failed: " + e.getMessage());
-    //     }
-    // }
 
 }
