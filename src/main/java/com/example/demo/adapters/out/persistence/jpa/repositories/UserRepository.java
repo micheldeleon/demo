@@ -63,11 +63,13 @@ public class UserRepository implements UserRepositoryPort {
 
     @Override
     public User findByEmail(String email) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email);
-        if (userEntity != null) {
-            return userMapper.toDomain(userEntity);
+
+        Optional<UserEntity> userEntity = userRepositoryJpa.findByEmail(email);
+        if (userEntity.isPresent()) {
+            return userMapper.toDomain(userEntity.get());
+        }else{
+            throw new RuntimeException("User not found");
         }
-        return null;
     }
     
 }
