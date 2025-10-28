@@ -31,18 +31,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        AuthenticationManager manager = authenticationManager();
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(manager);
-        jwtAuthenticationFilter.setFilterProcessesUrl("/login");
-
         return http.authorizeHttpRequests((authz) -> authz
                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
-                .requestMatchers(HttpMethod.POST, "/login").permitAll()
                 .anyRequest().authenticated())
+                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .csrf(config -> config.disable())
                 .sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

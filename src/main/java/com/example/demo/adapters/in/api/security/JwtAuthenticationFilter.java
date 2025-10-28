@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String password = null;
         try {
             credentials = new ObjectMapper().readValue(request.getInputStream(), HashMap.class);
-            username = credentials.getOrDefault("email", credentials.get("username"));
+            username = credentials.get("username");
             password = credentials.get("password");
         } catch (StreamReadException e) {
             e.printStackTrace();
@@ -96,7 +96,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Date date = new Date(System.currentTimeMillis() + oneDayInMs);
         return date;
     }
-       @Override
+
+    @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException failed) throws IOException, ServletException {
         Map<String, String> body = new HashMap<>();
@@ -107,6 +108,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(401);
         response.setContentType("application/json");
     }
-
 
 }
