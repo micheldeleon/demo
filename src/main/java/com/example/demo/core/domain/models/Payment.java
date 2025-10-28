@@ -1,6 +1,7 @@
 package com.example.demo.core.domain.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+//import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,6 @@ public class Payment { // Pago
     private Tournament tournament; // torneo
     private double amount;   // monto
     private String status;   // estado
-    private Date date;       // fecha
+    private LocalDateTime createdAt;
 }
 

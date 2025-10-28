@@ -1,20 +1,23 @@
 package com.example.demo.core.domain.models;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Data;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Fixture { // Fixture
+
+public class Sponsor {
     private Long id;
-    private List<Round> rounds; // jornadas
-    private Tournament tournament;
+    private Tournament tournament; // null cuando es global
+    private String name;
+    private String logoUrl;
+    private String description;
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 }
