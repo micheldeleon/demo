@@ -1,6 +1,7 @@
 package com.example.demo.adapters.in.api.security;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 
 import java.util.Collection;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,12 +30,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private static final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
+    private final JwtUtil jwtUtil;
     private static final String PREFIX_TOKEN = "Bearer ";
     private static final String HEADER_AUTHORIZATION = "Authorization";
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
         setAuthenticationManager(authenticationManager);
     }
 
@@ -79,7 +81,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .claims(claims)
                 .expiration(timer())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .signWith(SECRET_KEY)
+                .signWith(jwtUtil.getSecretKey())
                 .compact();
         response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
         Map<String, String> body = new HashMap<>();
