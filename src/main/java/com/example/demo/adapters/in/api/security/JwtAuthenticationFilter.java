@@ -1,6 +1,7 @@
 package com.example.demo.adapters.in.api.security;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 
 import java.util.Collection;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,12 +30,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private static final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
+    private final JwtUtil jwtUtil;
     private static final String PREFIX_TOKEN = "Bearer ";
     private static final String HEADER_AUTHORIZATION = "Authorization";
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
         setAuthenticationManager(authenticationManager);
     }
 
@@ -46,7 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String password = null;
         try {
             credentials = new ObjectMapper().readValue(request.getInputStream(), HashMap.class);
-            username = credentials.getOrDefault("email", credentials.get("username"));
+            username = credentials.get("username");
             password = credentials.get("password");
         } catch (StreamReadException e) {
             e.printStackTrace();
@@ -79,7 +81,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .claims(claims)
                 .expiration(timer())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .signWith(SECRET_KEY)
+                .signWith(jwtUtil.getSecretKey())
                 .compact();
         response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
         Map<String, String> body = new HashMap<>();
@@ -96,7 +98,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Date date = new Date(System.currentTimeMillis() + oneDayInMs);
         return date;
     }
-       @Override
+
+    @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException failed) throws IOException, ServletException {
         Map<String, String> body = new HashMap<>();
@@ -107,6 +110,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(401);
         response.setContentType("application/json");
     }
-
 
 }

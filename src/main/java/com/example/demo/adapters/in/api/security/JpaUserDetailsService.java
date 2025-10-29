@@ -1,9 +1,11 @@
+
 package com.example.demo.adapters.in.api.security;
 
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+
 import com.example.demo.adapters.out.persistence.jpa.entities.UserEntity;
 import com.example.demo.adapters.out.persistence.jpa.interfaces.UserRepositoryJpa;
+
 
 
 import io.jsonwebtoken.lang.Collections;
@@ -58,5 +62,6 @@ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundEx
         authorities
     );
 }
+
 
 }
