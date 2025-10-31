@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NonUniqueFormat extends Format { // NoUnico
+public class MultipleFormat extends Tournament { // NoUnico
     private String notes;
 }
 

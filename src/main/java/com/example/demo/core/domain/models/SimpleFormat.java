@@ -1,5 +1,5 @@
 package com.example.demo.core.domain.models;
 
-public class SimpleFormat extends Format { // Unico
+public class SimpleFormat extends Tournament { // Unico
 }
 
