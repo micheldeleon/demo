@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tournament { // Torneo
+public abstract class Tournament { // Torneo
     private Long id;
     private List<Team> teams; // equipos
     private Discipline discipline; // disciplina
@@ -28,6 +28,5 @@ public class Tournament { // Torneo
     private User organizer; // organizador
     private int minParticipantsPerTournament; // cantMinParticipantesXTorneo
     private int maxParticipantsPerTournament; // cantMaxParticipantesXTorneo
-    private Format format; // Formato
 }
 

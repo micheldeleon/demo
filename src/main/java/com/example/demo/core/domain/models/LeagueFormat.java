@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LeagueFormat extends NonUniqueFormat { // Liga
+public class LeagueFormat extends MultipleFormat { // Liga
     private int winPoints;   // puntosVictoria
     private int drawPoints;  // puntosEmpate
     private int lossPoints;  // puntosDerrota
