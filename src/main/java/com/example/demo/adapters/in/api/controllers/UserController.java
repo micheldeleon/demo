@@ -3,8 +3,8 @@ package com.example.demo.adapters.in.api.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +33,7 @@ public class UserController {
         this.registerUserPort = registerUserPort;
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping
     public List<UserResponseDTO> getAllUsers() {
         List<User> users = listUsersPort.listUsers();
@@ -41,6 +42,7 @@ public class UserController {
                 .collect(Collectors.toList());
     }// mover mapeo
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDto entity) {
         try {
@@ -51,6 +53,5 @@ public class UserController {
         }
 
     }
-
 
 }
