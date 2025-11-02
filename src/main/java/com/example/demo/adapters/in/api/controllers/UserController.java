@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-@CrossOrigin(origins = "*", originPatterns = "*")
+//@CrossOrigin(origins = "http://localhost:5173", originPatterns = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
