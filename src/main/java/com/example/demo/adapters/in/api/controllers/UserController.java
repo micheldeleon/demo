@@ -14,14 +14,13 @@ import com.example.demo.adapters.in.api.dto.UserResponseDTO;
 import com.example.demo.adapters.in.api.mappers.UserMapperDtos;
 import com.example.demo.core.domain.models.User;
 import com.example.demo.core.ports.in.ListUsersPort;
-import com.example.demo.core.ports.in.LoginUserPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
 
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+//@CrossOrigin(origins = "http://localhost:5173", originPatterns = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -33,7 +32,6 @@ public class UserController {
         this.registerUserPort = registerUserPort;
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping
     public List<UserResponseDTO> getAllUsers() {
         List<User> users = listUsersPort.listUsers();
@@ -42,7 +40,7 @@ public class UserController {
                 .collect(Collectors.toList());
     }// mover mapeo
 
-    @CrossOrigin(origins = "*")
+    
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDto entity) {
         try {
