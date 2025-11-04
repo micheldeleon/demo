@@ -40,6 +40,7 @@ public class UserController {
                 .collect(Collectors.toList());
     }// mover mapeo
 
+    
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDto entity) {
         try {

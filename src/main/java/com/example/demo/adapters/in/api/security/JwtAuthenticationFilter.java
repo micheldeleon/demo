@@ -28,15 +28,23 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import com.example.demo.core.domain.models.User;
+import com.example.demo.core.ports.out.UserRepositoryPort;
+import com.example.demo.adapters.in.api.dto.UserResponseDTO;
+import com.example.demo.adapters.in.api.mappers.UserMapperDtos;
+
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final UserRepositoryPort userRepositoryPort;
     private static final String PREFIX_TOKEN = "Bearer ";
     private static final String HEADER_AUTHORIZATION = "Authorization";
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil,
+            UserRepositoryPort userRepositoryPort) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.userRepositoryPort = userRepositoryPort;
         setAuthenticationManager(authenticationManager);
     }
 
@@ -84,9 +92,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .signWith(jwtUtil.getSecretKey())
                 .compact();
         response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
-        Map<String, String> body = new HashMap<>();
+        // Fetch domain user and map to response DTO
+        User domainUser = userRepositoryPort.findByEmail(username);
+        UserResponseDTO userDto = UserMapperDtos.toResponseDto(domainUser);
+
+        Map<String, Object> body = new HashMap<>();
         body.put("token", token);
-        body.put("username", username);
+        body.put("user", userDto);
         body.put("message", String.format("User %s logged in successfully", username));
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setContentType("application/json");

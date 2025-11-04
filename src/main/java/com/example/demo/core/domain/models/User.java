@@ -1,6 +1,7 @@
 package com.example.demo.core.domain.models;
 
 import java.util.Date;
+import java.util.List;
 
 import com.example.demo.core.domain.services.ValidateUruguayanIdService;
 import com.example.demo.core.domain.services.ValidateUserService;
@@ -21,6 +22,8 @@ public class User {
     private Date dateOfBirth; // fechaNacimiento
     private String nationalId; // ci
     private String phoneNumber; // celular
+    private List<Tournament> tournaments;
+    private List<Registration> registrations;
 
     public User(Long id, String name, String lastName, String email, String password) {
         this.id = id;
