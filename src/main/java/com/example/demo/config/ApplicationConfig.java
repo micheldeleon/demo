@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import com.example.demo.adapters.out.persistence.jpa.mappers.UserMapper;
 import com.example.demo.core.application.usecase.ListUsersUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
+import com.example.demo.core.application.usecase.UpdateUserUseCase;
 import com.example.demo.core.ports.in.ListUsersPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
+import com.example.demo.core.ports.in.UpdateProfilePort;
 import com.example.demo.core.ports.out.UserRepositoryPort;
 
 @Configuration
@@ -28,4 +30,8 @@ public class ApplicationConfig {
         return new RegisterUserUseCase(userRepositoryPort);
     }
 
+    @Bean
+    public UpdateProfilePort UpdateProfilePort(UserRepositoryPort userRepositoryPort) {
+        return new UpdateUserUseCase(userRepositoryPort);
+    }
 }

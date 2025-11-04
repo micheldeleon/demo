@@ -4,7 +4,7 @@ import com.example.demo.adapters.out.persistence.jpa.entities.UserEntity;
 import com.example.demo.core.domain.models.User;
 
 public class UserMapper {
-    public UserEntity toEntity(User user) {
+    public static UserEntity toEntity(User user) {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(user.getId());
         userEntity.setName(user.getName());
@@ -14,10 +14,12 @@ public class UserMapper {
         userEntity.setDateOfBirth(user.getDateOfBirth());
         userEntity.setNationalId(user.getNationalId());
         userEntity.setPhoneNumber(user.getPhoneNumber());
+        userEntity.setAddress(user.getAddress());
+        userEntity.setDepartment(DepartmentMapper.toEntity(user.getDepartment()));
         return userEntity;
     }
 
-    public User toDomain(UserEntity userEntity) {
+    public static User toDomain(UserEntity userEntity) {
         User user = new User();
         user.setId(userEntity.getId());
         user.setName(userEntity.getName());
@@ -27,6 +29,8 @@ public class UserMapper {
         user.setDateOfBirth(userEntity.getDateOfBirth());
         user.setNationalId(userEntity.getNationalId());
         user.setPhoneNumber(userEntity.getPhoneNumber());
+        user.setAddress(userEntity.getAddress());
+        user.setDepartment(DepartmentMapper.toDomain(userEntity.getDepartment()));
         return user;
     }
 

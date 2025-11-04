@@ -20,7 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import jakarta.servlet.FilterRegistration;
 import com.example.demo.core.ports.out.UserRepositoryPort;
 
 @Configuration
@@ -40,11 +39,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtUtil jwtUtil, UserRepositoryPort userRepositoryPort) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtUtil jwtUtil, UserRepositoryPort userRepositoryPort)
+            throws Exception {
         return http.authorizeHttpRequests((authz) -> authz
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()// sacar
                 .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/users/profile").permitAll()
                 .anyRequest().authenticated())
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, userRepositoryPort))
                 .csrf(config -> config.disable())
