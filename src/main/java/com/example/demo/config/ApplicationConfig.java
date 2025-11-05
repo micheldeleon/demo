@@ -4,9 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.example.demo.adapters.out.persistence.jpa.mappers.UserMapper;
+import com.example.demo.core.application.usecase.GetUserUseCase;
 import com.example.demo.core.application.usecase.ListUsersUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
 import com.example.demo.core.application.usecase.UpdateUserUseCase;
+import com.example.demo.core.ports.in.GetUserPort;
 import com.example.demo.core.ports.in.ListUsersPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
@@ -33,5 +35,10 @@ public class ApplicationConfig {
     @Bean
     public UpdateProfilePort UpdateProfilePort(UserRepositoryPort userRepositoryPort) {
         return new UpdateUserUseCase(userRepositoryPort);
+    }
+
+    @Bean
+    public GetUserPort GetUserPort(UserRepositoryPort userRepositoryPort) {
+        return new GetUserUseCase(userRepositoryPort);
     }
 }

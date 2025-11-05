@@ -32,6 +32,9 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        // this.dateOfBirth = new Date();
+        this.phoneNumber = "";
+        this.address = "";
         ValidateUserService.validateBasic(this);
     }
 

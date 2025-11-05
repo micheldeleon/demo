@@ -6,7 +6,6 @@ import com.example.demo.core.ports.out.UserRepositoryPort;
 
 public class RegisterUserUseCase implements RegisterUserPort {
     private final UserRepositoryPort userRepository;
-
     public RegisterUserUseCase(UserRepositoryPort userRepository) {
         this.userRepository = userRepository;
     }

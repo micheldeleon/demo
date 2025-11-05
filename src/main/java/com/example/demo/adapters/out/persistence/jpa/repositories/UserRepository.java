@@ -7,11 +7,13 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.adapters.out.persistence.jpa.entities.DepartmentEntity;
 import com.example.demo.adapters.out.persistence.jpa.entities.RoleEntity;
 import com.example.demo.adapters.out.persistence.jpa.entities.UserEntity;
 import com.example.demo.adapters.out.persistence.jpa.interfaces.DepartmentRepositoryJpa;
 import com.example.demo.adapters.out.persistence.jpa.interfaces.RoleRepositoryJpa;
 import com.example.demo.adapters.out.persistence.jpa.interfaces.UserRepositoryJpa;
+import com.example.demo.adapters.out.persistence.jpa.mappers.DepartmentMapper;
 import com.example.demo.adapters.out.persistence.jpa.mappers.UserMapper;
 import com.example.demo.config.ApplicationConfig;
 import com.example.demo.core.domain.models.Department;
@@ -54,11 +56,15 @@ public class UserRepository implements UserRepositoryPort {
     @Transactional
     public void save(User entity) {
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-        UserEntity userEntity = UserMapper.toEntity(entity);
+        DepartmentEntity dep = departmentRepositoryJpa.findById(0L).get();
+        entity.setDepartment(DepartmentMapper.toDomain(dep));
+        UserEntity userEntity = UserMapper
+                .toEntity(entity);
         Optional<RoleEntity> userRole = roleRepositoryJpa.findByName("ROLE_USER");
         List<RoleEntity> roles = new ArrayList<>();
         userRole.ifPresent(roles::add);
         userEntity.setRoles(roles);
+        // departmentRepositoryJpa.findById(0);
         userRepositoryJpa.save(userEntity);
     }
 
