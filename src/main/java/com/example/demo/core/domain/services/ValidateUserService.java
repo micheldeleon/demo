@@ -8,12 +8,16 @@ import com.example.demo.core.domain.models.User;
 public class ValidateUserService {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+        "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+    );
 
-    public static void validate(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("User must not be null");
-        }
+    // +, espacios, paréntesis y guiones. Sin el \n fantasma.
+    private static final Pattern PHONE_PATTERN = Pattern.compile(
+        "^[+]?[0-9 ()-]{6,20}$"
+    );
+
+    public static void validateBasic(User user) {
+        if (user == null) throw new IllegalArgumentException("User must not be null");
 
         // name
         if (isBlank(user.getName())) {
@@ -35,12 +39,12 @@ public class ValidateUserService {
         if (user.getPassword().length() < 8) {
             throw new IllegalArgumentException("Password must be at least 8 characters");
         }
-
-
-
     }
-    private void validateFull(User user){
-        Date dob = user.getDateOfBirth();
+
+    public static void validateProfile(User user) {
+        if (user == null) throw new IllegalArgumentException("User must not be null");
+
+        final Date dob = user.getDateOfBirth();
         if (dob == null) {
             throw new IllegalArgumentException("Date of birth is required");
         }
@@ -48,7 +52,6 @@ public class ValidateUserService {
             throw new IllegalArgumentException("Date of birth cannot be in the future");
         }
 
-        // national id (Uruguayan CI)
         if (isBlank(user.getNationalId())) {
             throw new IllegalArgumentException("National ID (CI) is required");
         }
@@ -56,16 +59,20 @@ public class ValidateUserService {
             throw new IllegalArgumentException("National ID (CI) is invalid");
         }
 
-        // phone number (basic sanity)
         if (isBlank(user.getPhoneNumber())) {
             throw new IllegalArgumentException("Phone number is required");
         }
-        if (!user.getPhoneNumber().matches("^[+]?\n?[- 0-9()]{6,20}$")) {
+        if (!PHONE_PATTERN.matcher(user.getPhoneNumber()).matches()) {
             throw new IllegalArgumentException("Phone number format is invalid");
         }
     }
+
+    public static void validateAll(User user) {
+        validateBasic(user);
+        validateProfile(user);
+    }
+
     private static boolean isBlank(String s) {
         return s == null || s.trim().isEmpty();
     }
 }
-
