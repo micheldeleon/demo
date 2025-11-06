@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/profile").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/by-id-and-email").permitAll()
                 .anyRequest().authenticated())
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, userRepositoryPort))
                 .csrf(config -> config.disable())

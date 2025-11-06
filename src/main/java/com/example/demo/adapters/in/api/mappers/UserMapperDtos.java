@@ -25,8 +25,20 @@ public class UserMapperDtos {
                 user.getNationalId(),
                 user.getPhoneNumber(),
                 user.getAddress(),
-                new Department(user.getDepartmentId())
-                );
+                new Department(user.getDepartmentId()));
+    }
+
+    public static UserFullDto toFullDto(User user) {
+
+        return new UserFullDto(user.getId(),
+                user.getName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getDateOfBirth(),
+                user.getNationalId(),
+                user.getPhoneNumber(),
+                user.getAddress(),
+                user.getDepartment().getId());
     }
 
 }
