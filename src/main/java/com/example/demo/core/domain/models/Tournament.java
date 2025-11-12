@@ -30,3 +30,5 @@ public abstract class Tournament { // Torneo
     private int maxParticipantsPerTournament; // cantMaxParticipantesXTorneo
 }
 
+
+
