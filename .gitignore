@@ -34,5 +34,3 @@ build/
 
 # Environment configuration
 .env
-
-config/jwt.secret
