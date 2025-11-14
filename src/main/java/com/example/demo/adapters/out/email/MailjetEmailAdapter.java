@@ -31,7 +31,10 @@ public class MailjetEmailAdapter implements EmailSenderPort {
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(20);
     private static final int MAX_RETRIES = 3;
     private static final long INITIAL_BACKOFF_MS = 750;
-
+    private static final String PROP_API_KEY = "mailjet.api.apikey";
+    private static final String PROP_SECRET_KEY = "mailjet.api.secretkey";
+    private static final String PROP_FROM_EMAIL = "mailjet.from.email";
+    private static final String PROP_FROM_NAME = "mailjet.from.name";
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final String apiKey;
@@ -44,10 +47,10 @@ public class MailjetEmailAdapter implements EmailSenderPort {
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(REQUEST_TIMEOUT)
                 .build();
-        this.apiKey = requireEnv(environment, "MAILJET_API_KEY");
-        this.apiSecret = requireEnv(environment, "MAILJET_API_SECRET");
-        this.defaultFromEmail = requireEnv(environment, "EMAIL_FROM");
-        this.defaultFromName = Optional.ofNullable(environment.getProperty("EMAIL_FROM_NAME"))
+        this.apiKey = requireProperty(environment, PROP_API_KEY);
+        this.apiSecret = requireProperty(environment, PROP_SECRET_KEY);
+        this.defaultFromEmail = requireProperty(environment, PROP_FROM_EMAIL);
+        this.defaultFromName = Optional.ofNullable(environment.getProperty(PROP_FROM_NAME))
                 .filter(name -> !name.isBlank())
                 .orElse(this.defaultFromEmail);
     }
@@ -164,10 +167,10 @@ public class MailjetEmailAdapter implements EmailSenderPort {
         return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
     }
 
-    private String requireEnv(Environment environment, String key) {
-        String value = Optional.ofNullable(environment.getProperty(key)).orElse(System.getenv(key));
+    private String requireProperty(Environment environment, String propertyKey) {
+        String value = environment.getProperty(propertyKey);
         if (value == null || value.isBlank()) {
-            throw new IllegalStateException("Environment variable " + key + " must be provided");
+            throw new IllegalStateException("Configuration property " + propertyKey + " must be provided");
         }
         return value;
     }
