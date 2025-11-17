@@ -28,6 +28,7 @@ public abstract class Tournament { // Torneo
     private User organizer; // organizador
     private int minParticipantsPerTournament; // cantMinParticipantesXTorneo
     private int maxParticipantsPerTournament; // cantMaxParticipantesXTorneo
+    private TournamentStatus status; // estado
 }
 
 
