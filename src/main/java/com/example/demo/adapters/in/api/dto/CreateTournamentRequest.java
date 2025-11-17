@@ -19,5 +19,5 @@ public record CreateTournamentRequest(
     @PositiveOrZero int minParticipantsPerTournament,
     @PositiveOrZero int maxParticipantsPerTournament,
     String prize,
-    @Positive double registrationCost
+    @PositiveOrZero double registrationCost
 ) {}
