@@ -12,7 +12,7 @@ public class TournamentMapper {
 
     public static Tournament toDomain(CreateTournamentRequest r) {
         // solo seteamos Discipline con el ID (lo demás lo podés cargar luego)
-        Discipline d = new Discipline(r.disciplineId(), false, null);
+        Discipline d = new Discipline(r.disciplineId(), false, null, null);
 
         return new SimpleTournament(
             null,                  // id lo asigna DB

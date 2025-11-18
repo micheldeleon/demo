@@ -1,5 +1,6 @@
 package com.example.demo.core.application.usecase;
 
+import com.example.demo.core.domain.models.TournamentStatus;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.out.SaveTournamentPort;
 import com.example.demo.core.domain.models.Tournament;
@@ -61,6 +62,9 @@ public class CreateTournamentUseCase implements CreateTournamentPort {
         // -------- Atributos de sistema --------
         if (t.getCreatedAt() == null) {
             t.setCreatedAt(new Date());
+        }
+        if (t.getStatus() == null) {
+            t.setStatus(TournamentStatus.ABIERTO); // estado por defecto al crearse
         }
 
         // NOTA: Tournament tiene organizer como objeto User (no id).
