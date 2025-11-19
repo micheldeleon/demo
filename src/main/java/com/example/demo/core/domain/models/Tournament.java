@@ -29,7 +29,50 @@ public abstract class Tournament { // Torneo
     private int minParticipantsPerTournament; // cantMinParticipantesXTorneo
     private int maxParticipantsPerTournament; // cantMaxParticipantesXTorneo
     private TournamentStatus status; // estado
+    // Factory principal para crear torneos sanos
+
+    public static Tournament create(Tournament t) {
+        t.createdAt = new Date();
+        t.status = TournamentStatus.ABIERTO;
+        t.validate();
+        return t;
+    }
+
+    // Reglas de dominio
+    public void validate() {
+
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("name es requerido");
+        }
+
+        // Equipo: min/max > 0
+        if (minParticipantsPerTeam <= 0 || maxParticipantsPerTeam <= 0) {
+            throw new IllegalArgumentException("min/maxParticipantsPerTeam deben ser > 0");
+        }
+
+        if (minParticipantsPerTeam > maxParticipantsPerTeam) {
+            throw new IllegalArgumentException("minParticipantsPerTeam > maxParticipantsPerTeam");
+        }
+
+        if (privateTournament && (password == null || password.isBlank())) {
+            throw new IllegalArgumentException("password requerido para torneo privado");
+        }
+
+        // Fechas
+        if (startAt != null && endAt != null && endAt.before(startAt)) {
+            throw new IllegalArgumentException("endAt < startAt");
+        }
+
+        if (startAt != null && registrationDeadline != null && registrationDeadline.after(startAt)) {
+            throw new IllegalArgumentException("registration_deadline > startAt");
+        }
+
+        // Min/max torneo
+        if (minParticipantsPerTournament > 0 && maxParticipantsPerTournament > 0
+                && minParticipantsPerTournament > maxParticipantsPerTournament) {
+
+            throw new IllegalArgumentException("minParticipantsPerTournament > maxParticipantsPerTournament");
+        }
+    }
+
 }
-
-
-
