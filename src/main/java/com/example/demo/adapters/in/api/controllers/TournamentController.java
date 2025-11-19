@@ -7,6 +7,7 @@ import com.example.demo.core.application.usecase.CreateTournamentUseCase;
 import com.example.demo.core.domain.models.Tournament;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,11 +22,16 @@ public class TournamentController {
 
     // Por ahora organizerId viene en el path. Luego lo obtendremos del JWT.
     @PostMapping("/organizer/{organizerId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public TournamentResponse create(
+    public ResponseEntity<TournamentResponse> create(
             @PathVariable Long organizerId,
             @Valid @RequestBody CreateTournamentRequest request) {
-        Tournament saved = createTournamentUseCase.create(TournamentMapper.toDomain(request), organizerId);
-        return TournamentMapper.toResponse(saved);
+
+        Tournament saved = createTournamentUseCase.create(
+                TournamentMapper.toDomain(request),
+                organizerId);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(TournamentMapper.toResponse(saved));
     }
 }
