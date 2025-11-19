@@ -24,11 +24,8 @@ public class TournamentController {
     @ResponseStatus(HttpStatus.CREATED)
     public TournamentResponse create(
             @PathVariable Long organizerId,
-            @Valid @RequestBody CreateTournamentRequest request
-    ) {
-        Tournament domain = TournamentMapper.toDomain(request);
-        Tournament saved = createTournamentUseCase.create(domain, organizerId);
+            @Valid @RequestBody CreateTournamentRequest request) {
+        Tournament saved = createTournamentUseCase.create(TournamentMapper.toDomain(request), organizerId);
         return TournamentMapper.toResponse(saved);
     }
 }
-
