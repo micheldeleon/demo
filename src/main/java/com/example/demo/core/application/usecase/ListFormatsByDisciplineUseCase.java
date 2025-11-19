@@ -9,7 +9,6 @@ import com.example.demo.core.ports.out.FormatRepositoryPort;
 
 @Service
 public class ListFormatsByDisciplineUseCase implements ListFormatsByDisciplinePort {
-    // implementa el puerto de entrada creado.
 
     private final FormatRepositoryPort formatRepositoryPort;
 
@@ -17,6 +16,7 @@ public class ListFormatsByDisciplineUseCase implements ListFormatsByDisciplinePo
         this.formatRepositoryPort = formatRepositoryPort;
     }
 
+    //Le pasamos un id de una disciplina y nos devuelve los formatos asociados
     @Override
     public List<Format> listByDisciplineId(Long disciplineId) {
         return formatRepositoryPort.findByDisciplineId(disciplineId);
