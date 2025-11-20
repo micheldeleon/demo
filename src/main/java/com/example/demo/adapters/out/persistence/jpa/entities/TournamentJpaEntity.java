@@ -61,4 +61,7 @@ public class TournamentJpaEntity {
 
   @Column(name="registration_cost", nullable=false, precision=10, scale=2)
   private BigDecimal registrationCost;
+
+  @Column(name = "status", nullable = false)
+  private String status;
 }

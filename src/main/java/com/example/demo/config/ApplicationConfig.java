@@ -7,13 +7,16 @@ import com.example.demo.adapters.out.persistence.jpa.mappers.UserMapper;
 import com.example.demo.core.application.usecase.CreateTournamentUseCase;
 import com.example.demo.core.application.usecase.GetUserUseCase;
 import com.example.demo.core.application.usecase.ListUsersUseCase;
+import com.example.demo.core.application.usecase.ListPublicTournamentsUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
 import com.example.demo.core.application.usecase.UpdateUserUseCase;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetUserPort;
+import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListUsersPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
+import com.example.demo.core.ports.out.FindTournamentsPort;
 import com.example.demo.core.ports.out.SaveTournamentPort;
 import com.example.demo.core.ports.out.UserRepositoryPort;
 
@@ -47,5 +50,10 @@ public class ApplicationConfig {
     @Bean
     public CreateTournamentPort CreateTournamentPort(SaveTournamentPort saveTournamentPort) {
         return new CreateTournamentUseCase(saveTournamentPort);
+    }
+
+    @Bean
+    public ListPublicTournamentsPort listPublicTournamentsPort(FindTournamentsPort findTournamentsPort) {
+        return new ListPublicTournamentsUseCase(findTournamentsPort);
     }
 }
