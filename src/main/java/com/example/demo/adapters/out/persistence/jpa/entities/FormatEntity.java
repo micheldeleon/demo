@@ -21,6 +21,6 @@ public class FormatEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @Column(name = "\"generateFixture\"")
+    @Column(name = "generate_fixture")
     private boolean generaFixture;
 }
