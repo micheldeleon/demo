@@ -1,15 +1,14 @@
 package com.example.demo.core.application.usecase;
 
 
+import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.out.SaveTournamentPort;
-import com.example.demo.core.domain.models.Tournament;
-import org.springframework.stereotype.Service;
 
 
 
 
-@Service
+
 public class CreateTournamentUseCase implements CreateTournamentPort {
 
     private final SaveTournamentPort savePort;
