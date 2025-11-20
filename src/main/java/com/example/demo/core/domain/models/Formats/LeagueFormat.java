@@ -1,4 +1,6 @@
-package com.example.demo.core.domain.models;
+package com.example.demo.core.domain.models.Formats;
+
+import com.example.demo.core.domain.models.Format;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LeagueFormat extends MultipleFormat { // Liga
+public class LeagueFormat extends Format { // Liga
     private int winPoints;   // puntosVictoria
     private int drawPoints;  // puntosEmpate
     private int lossPoints;  // puntosDerrota

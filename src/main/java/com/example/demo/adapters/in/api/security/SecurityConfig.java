@@ -15,12 +15,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.example.demo.core.ports.out.UserRepositoryPort;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.example.demo.adapters.in.api.security.JwtAuthorizationFilter;
+
 
 @Configuration
 public class SecurityConfig {
@@ -47,8 +51,15 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/profile").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/by-id-and-email").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/disciplines/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/mail/test").permitAll()
                 .anyRequest().authenticated())
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, userRepositoryPort))
+
+                //Agrego para crear torneo Maxi
+                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil),
+        UsernamePasswordAuthenticationFilter.class)
+
                 .csrf(config -> config.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
