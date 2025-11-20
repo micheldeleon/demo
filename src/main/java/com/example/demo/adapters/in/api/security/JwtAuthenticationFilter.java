@@ -1,25 +1,26 @@
 package com.example.demo.adapters.in.api.security;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-
-import java.util.Collection;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.demo.adapters.in.api.dto.UserResponseDTO;
+import com.example.demo.adapters.in.api.mappers.UserMapperDtos;
+import com.example.demo.core.domain.models.User;
+import com.example.demo.core.ports.out.UserRepositoryPort;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,11 +28,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import com.example.demo.core.domain.models.User;
-import com.example.demo.core.ports.out.UserRepositoryPort;
-import com.example.demo.adapters.in.api.dto.UserResponseDTO;
-import com.example.demo.adapters.in.api.mappers.UserMapperDtos;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;

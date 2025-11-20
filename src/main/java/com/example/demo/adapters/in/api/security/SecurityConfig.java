@@ -22,9 +22,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.example.demo.core.ports.out.UserRepositoryPort;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.example.demo.adapters.in.api.security.JwtAuthorizationFilter;
-
 
 @Configuration
 public class SecurityConfig {

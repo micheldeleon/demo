@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class Tournament { // Torneo
+public class Tournament { // Torneo
     private Long id;
     private List<Team> teams; // equipos
     private Discipline discipline; // disciplina
