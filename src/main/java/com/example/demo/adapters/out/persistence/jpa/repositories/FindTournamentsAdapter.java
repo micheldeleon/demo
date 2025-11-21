@@ -37,10 +37,14 @@ public class FindTournamentsAdapter implements FindTournamentsPort {
         OffsetDateTime startToOdt = toOdt(startTo);
         String statusValue = status != null ? status.name() : null;
 
+        String namePattern = (nameContains == null || nameContains.isBlank())
+                ? ""
+                : "%" + nameContains.toLowerCase() + "%";
+
         List<TournamentJpaEntity> entities = tournamentRepositoryJpa.findByFilters(
                 statusValue,
                 disciplineId,
-                nameContains,
+                namePattern,
                 startFromOdt,
                 startToOdt,
                 withPrize,

@@ -15,7 +15,7 @@ public interface TournamentRepositoryJpa extends JpaRepository<TournamentJpaEnti
             SELECT t FROM TournamentJpaEntity t
             WHERE (:status IS NULL OR t.status = :status)
               AND (:disciplineId IS NULL OR t.disciplineId = :disciplineId)
-              AND (:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')))
+              AND (:namePattern = '' OR LOWER(t.name) LIKE :namePattern)
               AND (:startFrom IS NULL OR t.startAt >= :startFrom)
               AND (:startTo IS NULL OR t.startAt <= :startTo)
               AND (:withPrize IS NULL OR (:withPrize = TRUE AND t.prize IS NOT NULL AND t.prize <> '')
@@ -26,7 +26,7 @@ public interface TournamentRepositoryJpa extends JpaRepository<TournamentJpaEnti
     List<TournamentJpaEntity> findByFilters(
             @Param("status") String status,
             @Param("disciplineId") Long disciplineId,
-            @Param("name") String name,
+            @Param("namePattern") String namePattern,
             @Param("startFrom") OffsetDateTime startFrom,
             @Param("startTo") OffsetDateTime startTo,
             @Param("withPrize") Boolean withPrize,
