@@ -1,11 +1,11 @@
 package com.example.demo.adapters.in.api.security;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -75,13 +75,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private List<GrantedAuthority> extractAuthorities(Claims claims) {
         Object raw = claims.get("authorities");
         if (raw instanceof Collection<?> collection) {
-            return (List<GrantedAuthority>) collection.stream()
-                    .map(this::mapAuthority)
-                    .collect(Collectors.toList());
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            for (Object entry : collection) {
+                authorities.add(mapAuthority(entry));
+            }
+            return authorities;
         }
         return Collections.emptyList();
     }
