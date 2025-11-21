@@ -5,10 +5,6 @@ import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.out.SaveTournamentPort;
 
-
-
-
-
 public class CreateTournamentUseCase implements CreateTournamentPort {
 
     private final SaveTournamentPort savePort;
