@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtValidationFilter extends BasicAuthenticationFilter {
+
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String PREFIX_TOKEN = "Bearer ";
     private static final String CLAIM_AUTHORITIES = "authorities";
@@ -55,8 +56,8 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
 
         String username = claims.getSubject();
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UsernamePasswordAuthenticationToken authentication =
-                    buildAuthentication(username, claims, request);
+            UsernamePasswordAuthenticationToken authentication
+                    = buildAuthentication(username, claims, request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
@@ -81,9 +82,9 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken buildAuthentication(String username, Claims claims,
-                                                                    HttpServletRequest request) {
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(username, null, extractAuthorities(claims));
+            HttpServletRequest request) {
+        UsernamePasswordAuthenticationToken authentication
+                = new UsernamePasswordAuthenticationToken(username, null, extractAuthorities(claims));
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         return authentication;
     }
@@ -108,8 +109,14 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
     }
 
     private GrantedAuthority mapAuthority(Object entry) {
-        if (entry instanceof Map<?, ?> map && map.get("authority") != null) {
-            return new SimpleGrantedAuthority(map.get("authority").toString());
+        if (entry instanceof Map<?, ?> map) {
+            Object authority = map.get("authority");
+            if (authority == null) {
+                authority = map.get("role");
+            }
+            if (authority != null) {
+                return new SimpleGrantedAuthority(authority.toString());
+            }
         }
         return new SimpleGrantedAuthority(entry.toString());
     }
