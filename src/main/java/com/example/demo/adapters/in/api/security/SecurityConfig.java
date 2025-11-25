@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ORGANIZER")
                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/profile").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/by-id-and-email").hasAnyRole("ORGANIZER", "USER")
+                .requestMatchers(HttpMethod.GET, "/api/users/by-id-and-email").hasRole( "USER")
                 .requestMatchers(HttpMethod.GET, "/api/disciplines/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/mail/test").permitAll()
                 .anyRequest().authenticated())
