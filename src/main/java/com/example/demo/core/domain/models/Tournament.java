@@ -76,4 +76,17 @@ public class Tournament { // Torneo
         }
     }
 
+public boolean isParticipant(Long userId) {
+    if (this.teams != null && !this.teams.isEmpty()) {
+        for (Team team : teams) {
+            if (team.hasParticipated(userId)) {
+                return true;
+            }
+        }
+        return false; // no estuvo en ningún equipo
+    } else {
+        throw new IllegalArgumentException("No hay participantes");
+    }
+}
+
 }
