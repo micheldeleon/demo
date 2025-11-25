@@ -49,7 +49,7 @@ public class TournamentController {
     }
     
     @GetMapping(params = { "id"})
-    public ResponseEntity<?> getTournamentsByUserId(
+    public ResponseEntity<?> getTournamentsByUserIdandEmail(
             @RequestParam Long id) {
         try {
             List<Tournament> tournaments = getTournamentPort.getSubscribedTournaments(id);
@@ -58,4 +58,7 @@ public class TournamentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
+
 }

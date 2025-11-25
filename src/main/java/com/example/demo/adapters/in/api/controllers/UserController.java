@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +16,7 @@ import com.example.demo.adapters.in.api.dto.UserFullDto;
 import com.example.demo.adapters.in.api.dto.UserRegisterDto;
 import com.example.demo.adapters.in.api.dto.UserResponseDTO;
 import com.example.demo.adapters.in.api.mappers.UserMapperDtos;
+import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.User;
 import com.example.demo.core.ports.in.GetUserPort;
 import com.example.demo.core.ports.in.ListUsersPort;
@@ -21,13 +25,10 @@ import com.example.demo.core.ports.in.UpdateProfilePort;
 
 import jakarta.validation.Valid;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
     private final ListUsersPort listUsersPort;
     private final RegisterUserPort registerUserPort;
     private final UpdateProfilePort updateProfilePort;
@@ -71,7 +72,7 @@ public class UserController {
 
     }
 
-    @GetMapping(params = { "id", "email" })
+    @GetMapping(params = {"id", "email"})
     public ResponseEntity<?> getUser(
             @RequestParam Long id,
             @RequestParam String email) {
@@ -83,4 +84,15 @@ public class UserController {
         }
     }
 
+    @GetMapping(params = {"id", "email"})
+    public ResponseEntity<?> getTournamentsByUserIdandEmail(
+            @RequestParam Long id,
+            @RequestParam String Email) {
+        try {
+            List<Tournament> tournaments = this.getUserPort.getUserByIdAndEmail(id, Email).getTournaments();
+            return ResponseEntity.ok(tournaments);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
