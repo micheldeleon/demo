@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -84,15 +85,27 @@ public class UserController {
         }
     }
 
-    @GetMapping(params = {"id", "email"})
-    public ResponseEntity<?> getTournamentsByUserIdandEmail(
-            @RequestParam Long id,
-            @RequestParam String Email) {
+
+    @GetMapping("/{id}/tournaments")
+    public ResponseEntity<?> getTournamentsByUserId(
+            @PathVariable Long id,
+            @RequestParam String email) {
         try {
-            List<Tournament> tournaments = this.getUserPort.getUserByIdAndEmail(id, Email).getTournaments();
-            return ResponseEntity.ok(tournaments);
+            User user = getUserPort.getUserByIdAndEmail(id, email);
+            return ResponseEntity.ok(user.getTournaments());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    // @GetMapping(params = {"id", "email"})
+    // public ResponseEntity<?> getTournamentsByUserIdandEmail(
+    //         @RequestParam Long id,
+    //         @RequestParam String Email) {
+    //     try {
+    //         List<Tournament> tournaments = this.getUserPort.getUserByIdAndEmail(id, Email).getTournaments();
+    //         return ResponseEntity.ok(tournaments);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     }
+    // }
 }
