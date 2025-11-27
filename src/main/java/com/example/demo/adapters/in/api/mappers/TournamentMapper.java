@@ -17,6 +17,8 @@ public class TournamentMapper {
         return new Tournament(
                 0L, // id
                 new ArrayList<>(), // teams
+                r.format(), // format
+                0, // teamsInscribed
                 d, // discipline
                 r.name(), // name
                 null, // createdAt (lo seteás después)
@@ -40,6 +42,7 @@ public class TournamentMapper {
         return new TournamentResponse(
                 t.getId(),
                 t.getDiscipline() != null ? t.getDiscipline().getId() : null,
+                t.getTeamsInscribed(),
                 t.getName(),
                 t.getCreatedAt(),
                 t.getStartAt(),

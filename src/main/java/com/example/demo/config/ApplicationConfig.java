@@ -26,6 +26,7 @@ import com.example.demo.core.ports.out.DisciplineRepositoryPort;
 import com.example.demo.core.ports.out.FormatRepositoryPort;
 import com.example.demo.core.ports.out.TournamentRepositoryPort;
 import com.example.demo.core.ports.out.UserRepositoryPort;
+import com.example.demo.core.application.usecase.GetTournamentById;
 
 @Configuration
 public class ApplicationConfig {
@@ -76,5 +77,9 @@ public class ApplicationConfig {
     @Bean
     public GetAllTournamentsPort GetAllTournamentsPort(TournamentRepositoryPort repo){
         return new GetAllTournamentsUseCase(repo);
+    }
+    @Bean
+    public GetTournamentById GetTournamentById(TournamentRepositoryPort repo){
+        return new GetTournamentById(repo);
     }
 }

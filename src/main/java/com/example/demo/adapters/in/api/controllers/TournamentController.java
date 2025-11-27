@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.adapters.in.api.dto.CreateTournamentRequest;
 import com.example.demo.adapters.in.api.dto.TournamentResponse;
 import com.example.demo.adapters.in.api.mappers.TournamentMapper;
+import com.example.demo.core.application.usecase.GetTournamentById;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetTournamentPort;
@@ -26,12 +27,14 @@ public class TournamentController {
     private final CreateTournamentPort createTournamentPort;
     private final GetTournamentPort getTournamentPort;
     private final GetAllTournamentsPort getAllTournamentsPort;
+    private final GetTournamentById getTournamentById;
 
     public TournamentController(CreateTournamentPort useCase, GetTournamentPort getUseCase,
-            GetAllTournamentsPort getAllUseCase) {
+            GetAllTournamentsPort getAllUseCase, GetTournamentById getByIdUseCase) {
         this.getAllTournamentsPort = getAllUseCase;
         this.createTournamentPort = useCase;
         this.getTournamentPort = getUseCase;
+        this.getTournamentById = getByIdUseCase;
     }
 
     // Por ahora organizerId viene en el path. Luego lo obtendremos del JWT.
@@ -58,6 +61,15 @@ public class TournamentController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getTournamentById(@PathVariable Long id) {
+        try {
+            Tournament tournament = getTournamentById.getTournamentById(id);
+            return ResponseEntity.ok(TournamentMapper.toResponse(tournament));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     // @GetMapping(params = { "id"})
     // public ResponseEntity<?> getTournamentsByUserIdandEmail(
     // @RequestParam Long id) {
