@@ -15,9 +15,9 @@ public class TournamentMapper {
         Discipline d = new Discipline(r.disciplineId(), false, null, null);
 
         return new Tournament(
-                0L, // id
+                null, // id
                 new ArrayList<>(), // teams
-                r.format(), // format
+                // r.format(), // format
                 0, // teamsInscribed
                 d, // discipline
                 r.name(), // name

@@ -11,7 +11,7 @@ import java.util.Date;
 public record CreateTournamentRequest(
     @NotNull Long disciplineId,
     @NotBlank String name,
-    Format format,
+    // @NotNull Format format,
     @NotNull Date startAt,
     @NotNull Date endAt,
     Date registrationDeadline,

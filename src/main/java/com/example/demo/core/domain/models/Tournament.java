@@ -14,7 +14,7 @@ public class Tournament { // Torneo
 
     private Long id;
     private List<Team> teams; // equipos
-    private Format format; // formato
+    // private Format format; // formato
     private int teamsInscribed; // equiposInscritos
     private Discipline discipline; // disciplina
     private String name; // nombre
