@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.example.demo.adapters.in.api.dto.CreateTournamentRequest;
 import com.example.demo.adapters.in.api.dto.TournamentResponse;
 import com.example.demo.core.domain.models.Discipline;
+import com.example.demo.core.domain.models.SimpleFormat;
 import com.example.demo.core.domain.models.Tournament;
 
 // Centraliza la conversión entre el JSON de la API y tu modelo de dominio.
@@ -13,11 +14,13 @@ public class TournamentMapper {
     public static Tournament toDomain(CreateTournamentRequest r) {
 
         Discipline d = new Discipline(r.disciplineId(), false, null, null);
+        SimpleFormat f = new SimpleFormat(r.formatId(), null, false);
 
         return new Tournament(
-                0L, // id
+                null, // id
                 new ArrayList<>(), // teams
                 d, // discipline
+                f, // format
                 r.name(), // name
                 null, // createdAt (lo seteás después)
                 r.endAt(), // endAt
@@ -40,6 +43,7 @@ public class TournamentMapper {
         return new TournamentResponse(
                 t.getId(),
                 t.getDiscipline() != null ? t.getDiscipline().getId() : null,
+                t.getFormat().getId(),
                 t.getName(),
                 t.getCreatedAt(),
                 t.getStartAt(),

@@ -5,6 +5,7 @@ import java.util.Date;
 public record TournamentResponse(
     Long id,
     Long disciplineId,
+    Long formatId,
     String name,
     Date createdAt,
     Date startAt,

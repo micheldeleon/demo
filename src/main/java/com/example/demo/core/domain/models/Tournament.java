@@ -15,6 +15,7 @@ public class Tournament { // Torneo
     private Long id;
     private List<Team> teams; // equipos
     private Discipline discipline; // disciplina
+    private Format format; // formato (clase padre de los distintos formats)
     private String name; // nombre
     private Date createdAt; // fechaCreacion
     private Date endAt; // fechaFin

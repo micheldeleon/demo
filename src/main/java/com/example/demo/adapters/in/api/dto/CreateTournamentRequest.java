@@ -8,6 +8,7 @@ import java.util.Date;
 
 public record CreateTournamentRequest(
     @NotNull Long disciplineId,
+    @NotNull Long formatId,
     @NotBlank String name,
     @NotNull Date startAt,
     @NotNull Date endAt,

@@ -84,12 +84,10 @@ public class UserController {
         }
     }
 
-    @GetMapping(params = {"id", "email"})
-    public ResponseEntity<?> getTournamentsByUserIdandEmail(
-            @RequestParam Long id,
-            @RequestParam String Email) {
+    @GetMapping("/api/users/tournaments")
+    public ResponseEntity<?> getTournamentsByUserIdandEmail(@RequestParam Long id, @RequestParam String email) {
         try {
-            List<Tournament> tournaments = this.getUserPort.getUserByIdAndEmail(id, Email).getTournaments();
+            List<Tournament> tournaments = this.getUserPort.getUserByIdAndEmail(id, email).getTournaments();
             return ResponseEntity.ok(tournaments);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
