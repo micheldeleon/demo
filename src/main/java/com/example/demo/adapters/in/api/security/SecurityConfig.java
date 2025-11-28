@@ -51,7 +51,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/disciplines/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/mail/test").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tournaments").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/tournaments/organizer/**").permitAll()
                 .anyRequest().authenticated())
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, userRepositoryPort))
                 .addFilterBefore(new JwtValidationFilter(authenticationManager(), jwtUtil),

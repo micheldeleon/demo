@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.demo.core.domain.models.Tournament;
 
-public interface GetTournamentPort {
-    List<Tournament> getSubscribedTournaments(Long user);
+
+public interface GetAllTournamentsPort {
+    List<Tournament> getAllTournaments();
 }

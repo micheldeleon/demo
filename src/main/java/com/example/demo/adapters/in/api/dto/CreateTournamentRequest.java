@@ -4,12 +4,15 @@
 package com.example.demo.adapters.in.api.dto;
 
 import jakarta.validation.constraints.*;
+
+import com.example.demo.core.domain.models.Format;
 import java.util.Date;
 
 public record CreateTournamentRequest(
     @NotNull Long disciplineId,
     @NotNull Long formatId,
     @NotBlank String name,
+    // @NotNull Format format,
     @NotNull Date startAt,
     @NotNull Date endAt,
     Date registrationDeadline,

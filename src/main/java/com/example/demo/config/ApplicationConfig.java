@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.example.demo.adapters.out.persistence.jpa.mappers.UserMapper;
 import com.example.demo.core.application.usecase.CreateTournamentUseCase;
+import com.example.demo.core.application.usecase.GetAllTournamentsUseCase;
 import com.example.demo.core.application.usecase.GetTournamentUseCase;
 import com.example.demo.core.application.usecase.GetUserUseCase;
 import com.example.demo.core.application.usecase.ListDisciplinesUseCase;
@@ -13,6 +14,7 @@ import com.example.demo.core.application.usecase.ListUsersUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
 import com.example.demo.core.application.usecase.UpdateUserUseCase;
 import com.example.demo.core.ports.in.CreateTournamentPort;
+import com.example.demo.core.ports.in.GetAllTournamentsPort;
 import com.example.demo.core.ports.in.GetTournamentPort;
 import com.example.demo.core.ports.in.GetUserPort;
 import com.example.demo.core.ports.in.ListDisciplinesPort;
@@ -24,6 +26,7 @@ import com.example.demo.core.ports.out.DisciplineRepositoryPort;
 import com.example.demo.core.ports.out.FormatRepositoryPort;
 import com.example.demo.core.ports.out.TournamentRepositoryPort;
 import com.example.demo.core.ports.out.UserRepositoryPort;
+import com.example.demo.core.application.usecase.GetTournamentById;
 
 @Configuration
 public class ApplicationConfig {
@@ -70,5 +73,13 @@ public class ApplicationConfig {
     @Bean
     public GetTournamentPort GetTournamentPort(TournamentRepositoryPort repo){
         return new GetTournamentUseCase(repo);
+    }
+    @Bean
+    public GetAllTournamentsPort GetAllTournamentsPort(TournamentRepositoryPort repo){
+        return new GetAllTournamentsUseCase(repo);
+    }
+    @Bean
+    public GetTournamentById GetTournamentById(TournamentRepositoryPort repo){
+        return new GetTournamentById(repo);
     }
 }
