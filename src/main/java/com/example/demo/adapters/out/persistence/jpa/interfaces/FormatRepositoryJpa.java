@@ -17,4 +17,9 @@ public interface FormatRepositoryJpa extends CrudRepository<FormatEntity, Long> 
     """, nativeQuery = true)
     List<FormatEntity> findAllByDisciplineId(Long disciplineId);
 
+    @Query(value = """
+    SELECT df.format_id FROM discipline_formats df
+    WHERE df.discipline_id = :disciplineId
+    """, nativeQuery = true)
+    List<Long> findIdsByDisciplineId(Long disciplineId);
 }

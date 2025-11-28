@@ -1,4 +1,4 @@
-package com.example.demo.adapters.in.api.controllers;
+﻿package com.example.demo.adapters.in.api.controllers;
 
 import java.util.Date;
 import java.util.List;
@@ -19,9 +19,11 @@ import com.example.demo.adapters.in.api.dto.TournamentResponse;
 import com.example.demo.adapters.in.api.dto.TournamentSummaryResponse;
 import com.example.demo.adapters.in.api.mappers.TournamentMapper;
 import com.example.demo.adapters.in.api.mappers.TournamentSummaryMapper;
-import com.example.demo.core.application.usecase.CreateTournamentUseCase;
+import com.example.demo.core.application.usecase.GetTournamentById;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
+import com.example.demo.core.ports.in.CreateTournamentPort;
+import com.example.demo.core.ports.in.GetAllTournamentsPort;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
 
@@ -31,25 +33,30 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/tournaments")
 public class TournamentController {
 
-    private final CreateTournamentUseCase createTournamentUseCase;
+    private final CreateTournamentPort createTournamentPort;
+    private final GetAllTournamentsPort getAllTournamentsPort;
+    private final GetTournamentById getTournamentById;
     private final ListPublicTournamentsPort listPublicTournamentsPort;
     private final ListTournamentsByStatusPort listTournamentsByStatusPort;
 
-    public TournamentController(CreateTournamentUseCase useCase,
+    public TournamentController(CreateTournamentPort createTournamentPort,
+            GetAllTournamentsPort getAllTournamentsPort,
+            GetTournamentById getTournamentById,
             ListPublicTournamentsPort listPublicTournamentsPort,
             ListTournamentsByStatusPort listTournamentsByStatusPort) {
-        this.createTournamentUseCase = useCase;
+        this.createTournamentPort = createTournamentPort;
+        this.getAllTournamentsPort = getAllTournamentsPort;
+        this.getTournamentById = getTournamentById;
         this.listPublicTournamentsPort = listPublicTournamentsPort;
         this.listTournamentsByStatusPort = listTournamentsByStatusPort;
     }
 
-    // Por ahora organizerId viene en el path. Luego lo obtendremos del JWT.
     @PostMapping("/organizer/{organizerId}")
     public ResponseEntity<TournamentResponse> create(
             @PathVariable Long organizerId,
             @Valid @RequestBody CreateTournamentRequest request) {
 
-        Tournament saved = createTournamentUseCase.create(
+        Tournament saved = createTournamentPort.create(
                 TournamentMapper.toDomain(request),
                 organizerId);
 
@@ -82,11 +89,29 @@ public class TournamentController {
     }
 
     @GetMapping("/status")
-    public List<TournamentSummaryResponse> listByStatus(
-            @RequestParam TournamentStatus status) {
+    public List<TournamentSummaryResponse> listByStatus(@RequestParam TournamentStatus status) {
         return listTournamentsByStatusPort.listByStatus(status)
                 .stream()
                 .map(TournamentSummaryMapper::toResponse)
                 .toList();
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllTournaments() {
+        try {
+            return ResponseEntity.ok(getAllTournamentsPort.getAllTournaments());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getTournamentById(@PathVariable Long id) {
+        try {
+            Tournament tournament = getTournamentById.getTournamentById(id);
+            return ResponseEntity.ok(TournamentMapper.toResponse(tournament));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

@@ -44,7 +44,11 @@ public class FormatRepositoryAdapter implements FormatRepositoryPort {
 
     @Override
     public List<Format> findByDisciplineId(Long disciplineId) {
-        List<FormatEntity> entities = formatRepositoryJpa.findAllByDisciplineId(disciplineId);
+        List<Long> ids = formatRepositoryJpa.findIdsByDisciplineId(disciplineId);
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Iterable<FormatEntity> entities = formatRepositoryJpa.findAllById(ids);
         List<Format> formats = new ArrayList<>();
         for (FormatEntity entity : entities) {
             formats.add(FormatMapper.toDomain(entity));

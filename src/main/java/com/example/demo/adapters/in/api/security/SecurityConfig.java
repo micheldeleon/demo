@@ -22,9 +22,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.example.demo.core.ports.out.UserRepositoryPort;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.example.demo.adapters.in.api.security.JwtAuthorizationFilter;
-
 
 @Configuration
 public class SecurityConfig {
@@ -47,21 +44,21 @@ public class SecurityConfig {
             throws Exception {
         return http.authorizeHttpRequests((authz) -> authz
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()// sacar
-                .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ORGANIZER")
                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/profile").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/by-id-and-email").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/by-id-and-email").hasRole("USER")
                 .requestMatchers(HttpMethod.GET, "/api/disciplines/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tournaments/public").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tournaments/status").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/mail/test").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/tournaments").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/tournaments/**").permitAll()
+
                 .anyRequest().authenticated())
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil, userRepositoryPort))
-
-                //Agrego para crear torneo Maxi
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil),
-        UsernamePasswordAuthenticationFilter.class)
-
+                .addFilterBefore(new JwtValidationFilter(authenticationManager(), jwtUtil),
+                        UsernamePasswordAuthenticationFilter.class)
                 .csrf(config -> config.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

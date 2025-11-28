@@ -10,10 +10,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class Tournament { // Torneo
+public class Tournament { // Torneo
+
     private Long id;
     private List<Team> teams; // equipos
+    // private Format format; // formato
+    private int teamsInscribed; // equiposInscritos
     private Discipline discipline; // disciplina
+    private Format format; // formato (clase padre de los distintos formats)
     private String name; // nombre
     private Date createdAt; // fechaCreacion
     private Date endAt; // fechaFin
@@ -74,5 +78,18 @@ public abstract class Tournament { // Torneo
             throw new IllegalArgumentException("minParticipantsPerTournament > maxParticipantsPerTournament");
         }
     }
+
+public boolean isParticipant(Long userId) {
+    if (this.teams != null && !this.teams.isEmpty()) {
+        for (Team team : teams) {
+            if (team.hasParticipated(userId)) {
+                return true;
+            }
+        }
+        return false; // no estuvo en ningún equipo
+    } else {
+        throw new IllegalArgumentException("No hay participantes");
+    }
+}
 
 }

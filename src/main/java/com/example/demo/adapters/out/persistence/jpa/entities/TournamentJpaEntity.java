@@ -2,10 +2,23 @@ package com.example.demo.adapters.out.persistence.jpa.entities;
 
 //Mapeo 1:1 a la tabla public.tournaments.
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+
+import com.example.demo.adapters.out.persistence.jpa.entities.FormatEntity;
 
 @Entity
 @Table(name = "tournaments", schema = "public")
@@ -19,8 +32,9 @@ public class TournamentJpaEntity {
   @Column(name="discipline_id", nullable=false)
   private Long disciplineId;
 
-  @Column(name="format_id")
-  private Long formatId;
+  @ManyToOne
+  @JoinColumn(name = "format_id")
+  private FormatEntity format;
 
   @Column(name="organizer_id", nullable=false)
   private Long organizerId;

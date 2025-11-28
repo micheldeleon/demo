@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public abstract class Format {
+
     private Long id;
     private String name;
     private boolean generaFixture;

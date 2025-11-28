@@ -1,7 +1,5 @@
 package com.example.demo.core.application.usecase;
 
-import javax.management.RuntimeErrorException;
-
 import com.example.demo.core.domain.models.User;
 import com.example.demo.core.domain.services.ValidateUserService;
 import com.example.demo.core.ports.in.GetUserPort;

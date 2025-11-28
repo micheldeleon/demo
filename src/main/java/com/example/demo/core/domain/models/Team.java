@@ -11,12 +11,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Team { // Equipo
+
     private Long id;
     private String name; // nombre del equipo
     private List<Participant> participants; // participantes
     private User creator; // creador
     //Fecha de creacion 
     private LocalDateTime createdAt;
+
+    public boolean hasParticipated(Long userId) {
+        if (this.participants != null && !this.participants.isEmpty()) {
+            for (Participant participant : participants) {
+                if (participant.getId().equals(userId)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            throw new IllegalArgumentException("No hay participantes");
+        }
+    }
     //Si vemos mas datos que pueden llegar a ir
 }
-
