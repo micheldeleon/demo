@@ -12,15 +12,25 @@ import com.example.demo.adapters.out.persistence.jpa.interfaces.TournamentReposi
 import com.example.demo.adapters.out.persistence.jpa.mappers.TournamentMapper;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
+import com.example.demo.core.ports.out.FindTournamentsByStatusPort;
 import com.example.demo.core.ports.out.FindTournamentsPort;
 
 @Component
-public class FindTournamentsAdapter implements FindTournamentsPort {
+public class FindTournamentsAdapter implements FindTournamentsPort, FindTournamentsByStatusPort {
 
     private final TournamentRepositoryJpa tournamentRepositoryJpa;
 
     public FindTournamentsAdapter(TournamentRepositoryJpa tournamentRepositoryJpa) {
         this.tournamentRepositoryJpa = tournamentRepositoryJpa;
+    }
+
+    @Override
+    public List<Tournament> findByStatus(TournamentStatus status) {
+        String statusValue = status != null ? status.name() : null;
+        List<TournamentJpaEntity> entities = tournamentRepositoryJpa.findByStatus(statusValue);
+        return entities.stream()
+                .map(TournamentMapper::mapToDomain)
+                .toList();
     }
 
     @Override

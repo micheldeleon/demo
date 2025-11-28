@@ -23,6 +23,7 @@ import com.example.demo.core.application.usecase.CreateTournamentUseCase;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
+import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
 
 import jakarta.validation.Valid;
 
@@ -32,11 +33,14 @@ public class TournamentController {
 
     private final CreateTournamentUseCase createTournamentUseCase;
     private final ListPublicTournamentsPort listPublicTournamentsPort;
+    private final ListTournamentsByStatusPort listTournamentsByStatusPort;
 
     public TournamentController(CreateTournamentUseCase useCase,
-            ListPublicTournamentsPort listPublicTournamentsPort) {
+            ListPublicTournamentsPort listPublicTournamentsPort,
+            ListTournamentsByStatusPort listTournamentsByStatusPort) {
         this.createTournamentUseCase = useCase;
         this.listPublicTournamentsPort = listPublicTournamentsPort;
+        this.listTournamentsByStatusPort = listTournamentsByStatusPort;
     }
 
     // Por ahora organizerId viene en el path. Luego lo obtendremos del JWT.
@@ -72,6 +76,15 @@ public class TournamentController {
                 startTo,
                 withPrize,
                 withRegistrationCost)
+                .stream()
+                .map(TournamentSummaryMapper::toResponse)
+                .toList();
+    }
+
+    @GetMapping("/status")
+    public List<TournamentSummaryResponse> listByStatus(
+            @RequestParam TournamentStatus status) {
+        return listTournamentsByStatusPort.listByStatus(status)
                 .stream()
                 .map(TournamentSummaryMapper::toResponse)
                 .toList();

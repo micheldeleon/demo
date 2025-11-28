@@ -31,4 +31,6 @@ public interface TournamentRepositoryJpa extends JpaRepository<TournamentJpaEnti
             @Param("startTo") OffsetDateTime startTo,
             @Param("withPrize") Boolean withPrize,
             @Param("withCost") Boolean withCost);
+
+    List<TournamentJpaEntity> findByStatus(String status);
 }
