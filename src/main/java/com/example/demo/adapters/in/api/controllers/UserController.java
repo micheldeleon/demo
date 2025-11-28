@@ -84,7 +84,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(params = {"id", "email"})
+    @GetMapping(value = "/tournaments", params = {"id", "email"})
     public ResponseEntity<?> getTournamentsByUserIdandEmail(
             @RequestParam Long id,
             @RequestParam String Email) {
