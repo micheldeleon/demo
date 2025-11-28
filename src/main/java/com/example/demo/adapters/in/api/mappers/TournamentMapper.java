@@ -45,7 +45,7 @@ public class TournamentMapper {
         return new TournamentResponse(
                 t.getId(),
                 t.getFormat(),
-                t.getDiscipline() != null ? t.getDiscipline().getId() : null,
+                t.getDiscipline(),
                 t.getName(),
                 t.getCreatedAt(),
                 t.getStartAt(),

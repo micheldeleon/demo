@@ -2,12 +2,13 @@ package com.example.demo.adapters.in.api.dto;
 
 import java.util.Date;
 
+import com.example.demo.core.domain.models.Discipline;
 import com.example.demo.core.domain.models.Format;
 
 public record TournamentResponse(
     Long id,
     Format format,
-    Long disciplineId,
+    Discipline discipline,
     String name,
     Date createdAt,
     Date startAt,
