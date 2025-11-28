@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/disciplines/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tournaments/public").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tournaments/status").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/tournaments/*/register").hasRole("USER")
                 .requestMatchers(HttpMethod.POST, "/api/mail/test").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tournaments").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tournaments/**").permitAll()

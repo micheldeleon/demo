@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.adapters.in.api.dto.CreateTournamentRequest;
+import com.example.demo.adapters.in.api.dto.RegisterToTournamentRequest;
 import com.example.demo.adapters.in.api.dto.TournamentResponse;
 import com.example.demo.adapters.in.api.dto.TournamentSummaryResponse;
 import com.example.demo.adapters.in.api.mappers.TournamentMapper;
@@ -26,6 +27,7 @@ import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
+import com.example.demo.core.ports.in.RegisterToTournamentPort;
 
 import jakarta.validation.Valid;
 
@@ -38,17 +40,20 @@ public class TournamentController {
     private final GetTournamentById getTournamentById;
     private final ListPublicTournamentsPort listPublicTournamentsPort;
     private final ListTournamentsByStatusPort listTournamentsByStatusPort;
+    private final RegisterToTournamentPort registerToTournamentPort;
 
     public TournamentController(CreateTournamentPort createTournamentPort,
             GetAllTournamentsPort getAllTournamentsPort,
             GetTournamentById getTournamentById,
             ListPublicTournamentsPort listPublicTournamentsPort,
-            ListTournamentsByStatusPort listTournamentsByStatusPort) {
+            ListTournamentsByStatusPort listTournamentsByStatusPort,
+            RegisterToTournamentPort registerToTournamentPort) {
         this.createTournamentPort = createTournamentPort;
         this.getAllTournamentsPort = getAllTournamentsPort;
         this.getTournamentById = getTournamentById;
         this.listPublicTournamentsPort = listPublicTournamentsPort;
         this.listTournamentsByStatusPort = listTournamentsByStatusPort;
+        this.registerToTournamentPort = registerToTournamentPort;
     }
 
     @PostMapping("/organizer/{organizerId}")
@@ -111,6 +116,19 @@ public class TournamentController {
             Tournament tournament = getTournamentById.getTournamentById(id);
             return ResponseEntity.ok(TournamentMapper.toResponse(tournament));
         } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/register")
+    public ResponseEntity<?> registerToTournament(@PathVariable Long id,
+            @Valid @RequestBody RegisterToTournamentRequest request) {
+        try {
+            registerToTournamentPort.register(id, request.userId());
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
