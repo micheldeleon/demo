@@ -125,7 +125,11 @@ public class TournamentController {
             @Valid @RequestBody RegisterToTournamentRequest request) {
         try {
             registerToTournamentPort.register(id, request.userId());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of(
+                            "message", "Inscripción realizada correctamente",
+                            "tournamentId", id,
+                            "userId", request.userId()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalStateException e) {
