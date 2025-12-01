@@ -57,7 +57,8 @@ public class TournamentMapper {
                 t.getMinParticipantsPerTeam(),
                 t.getMaxParticipantsPerTeam(),
                 t.getMinParticipantsPerTournament(),
-                t.getMaxParticipantsPerTournament()
+                t.getMaxParticipantsPerTournament(),
+                t.getTeamsInscribed()
         );
     }
 }

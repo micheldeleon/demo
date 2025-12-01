@@ -20,5 +20,6 @@ public record TournamentResponse(
     int minParticipantsPerTeam,
     int maxParticipantsPerTeam,
     int minParticipantsPerTournament,
-    int maxParticipantsPerTournament
+    int maxParticipantsPerTournament,
+    int teamsInscribed
 ) {}
