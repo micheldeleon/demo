@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.example.demo.core.domain.models.Discipline;
 import com.example.demo.core.domain.models.Format;
+import com.example.demo.core.domain.models.User;
 
 public record TournamentResponse(
     Long id,
@@ -21,5 +22,6 @@ public record TournamentResponse(
     int maxParticipantsPerTeam,
     int minParticipantsPerTournament,
     int maxParticipantsPerTournament,
-    int teamsInscribed
+    int teamsInscribed,
+    Long organizerId
 ) {}

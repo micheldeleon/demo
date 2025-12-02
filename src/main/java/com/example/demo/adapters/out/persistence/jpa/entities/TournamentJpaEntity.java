@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 import com.example.demo.adapters.out.persistence.jpa.entities.FormatEntity;
+import com.example.demo.adapters.out.persistence.jpa.entities.DisciplineEntity;
 
 @Entity
 @Table(name = "tournaments", schema = "public")
@@ -29,8 +30,9 @@ public class TournamentJpaEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name="discipline_id", nullable=false)
-  private Long disciplineId;
+  @ManyToOne
+  @JoinColumn(name = "discipline_id", nullable=false)
+  private DisciplineEntity discipline;
 
   @ManyToOne
   @JoinColumn(name = "format_id")

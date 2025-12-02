@@ -20,8 +20,14 @@ public class TournamentMapper {
         e.setId(t.getId());
         e.setName(t.getName());
 
-        // Discipline en dominio -> disciplineId (Long) en JPA
-        e.setDisciplineId(t.getDiscipline() != null ? t.getDiscipline().getId() : null);
+        // Discipline en dominio -> DisciplineEntity en JPA
+        if (t.getDiscipline() != null) {
+            var disciplineRef = new com.example.demo.adapters.out.persistence.jpa.entities.DisciplineEntity();
+            disciplineRef.setId(t.getDiscipline().getId());
+            e.setDiscipline(disciplineRef);
+        } else {
+            e.setDiscipline(null);
+        }
 
         // Format en dominio -> relación con FormatEntity (solo necesitamos el id)
         if (t.getFormat() != null && t.getFormat().getId() != null) {
@@ -68,7 +74,7 @@ public class TournamentMapper {
         Tournament tournament = new Tournament();
         tournament.setId(entity.getId());
         tournament.setTeams(new ArrayList<>());
-        tournament.setDiscipline(new Discipline(entity.getDisciplineId(), false, null, null));
+        tournament.setDiscipline(entity.getDiscipline() != null ? DisciplineMapper.toDomain(entity.getDiscipline()) : null);
         tournament.setFormat(entity.getFormat() != null ? FormatMapper.toDomain(entity.getFormat()) : null);
         tournament.setName(entity.getName());
         tournament.setCreatedAt(fromOdt(entity.getCreatedAt()));
