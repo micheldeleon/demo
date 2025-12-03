@@ -6,10 +6,10 @@ import com.example.demo.core.ports.in.GetTournamentByIdPort;
 
 import com.example.demo.core.ports.out.TournamentRepositoryPort;
 
-public class GetTournamentById implements GetTournamentByIdPort{
+public class GetTournamentByIdUseCase implements GetTournamentByIdPort{
     private final TournamentRepositoryPort tournamentRepository;
 
-    public GetTournamentById(TournamentRepositoryPort tournamentRepository) {
+    public GetTournamentByIdUseCase(TournamentRepositoryPort tournamentRepository) {
         this.tournamentRepository = tournamentRepository;
     }
 

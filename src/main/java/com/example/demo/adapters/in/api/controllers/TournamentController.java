@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.adapters.in.api.dto.CreateTournamentRequest;
 import com.example.demo.adapters.in.api.dto.TournamentResponse;
 import com.example.demo.adapters.in.api.mappers.TournamentMapper;
-import com.example.demo.core.application.usecase.GetTournamentById;
+import com.example.demo.core.application.usecase.GetTournamentByIdUseCase;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetTournamentPort;
@@ -27,10 +27,10 @@ public class TournamentController {
     private final CreateTournamentPort createTournamentPort;
     private final GetTournamentPort getTournamentPort;
     private final GetAllTournamentsPort getAllTournamentsPort;
-    private final GetTournamentById getTournamentById;
+    private final GetTournamentByIdUseCase getTournamentById;
 
     public TournamentController(CreateTournamentPort useCase, GetTournamentPort getUseCase,
-            GetAllTournamentsPort getAllUseCase, GetTournamentById getByIdUseCase) {
+            GetAllTournamentsPort getAllUseCase, GetTournamentByIdUseCase getByIdUseCase) {
         this.getAllTournamentsPort = getAllUseCase;
         this.createTournamentPort = useCase;
         this.getTournamentPort = getUseCase;

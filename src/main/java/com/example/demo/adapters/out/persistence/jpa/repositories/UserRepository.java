@@ -16,9 +16,7 @@ import com.example.demo.adapters.out.persistence.jpa.interfaces.UserRepositoryJp
 import com.example.demo.adapters.out.persistence.jpa.mappers.DepartmentMapper;
 import com.example.demo.adapters.out.persistence.jpa.mappers.UserMapper;
 import com.example.demo.config.ApplicationConfig;
-import com.example.demo.core.domain.models.Department;
 import com.example.demo.core.domain.models.User;
-import com.example.demo.core.ports.in.RegisterUserPort;
 import com.example.demo.core.ports.out.UserRepositoryPort;
 
 import jakarta.transaction.Transactional;

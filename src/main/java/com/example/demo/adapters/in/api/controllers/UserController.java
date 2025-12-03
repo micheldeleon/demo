@@ -18,7 +18,8 @@ import com.example.demo.adapters.in.api.dto.UserResponseDTO;
 import com.example.demo.adapters.in.api.mappers.UserMapperDtos;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.User;
-import com.example.demo.core.ports.in.GetUserPort;
+import com.example.demo.core.ports.in.GetUserByIdPort;
+import com.example.demo.core.ports.in.GetUserByIdAndEmailPort;
 import com.example.demo.core.ports.in.ListUsersPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
@@ -32,14 +33,16 @@ public class UserController {
     private final ListUsersPort listUsersPort;
     private final RegisterUserPort registerUserPort;
     private final UpdateProfilePort updateProfilePort;
-    private final GetUserPort getUserPort;
+    private final GetUserByIdAndEmailPort getUserByIdAndEmailPort;
+    private final GetUserByIdPort getUserByIdPort;
 
     public UserController(ListUsersPort listUsersPort, RegisterUserPort registerUserPort,
-            UpdateProfilePort updateProfilePort, GetUserPort getUserPort) {
+            UpdateProfilePort updateProfilePort, GetUserByIdAndEmailPort getUserPort, GetUserByIdPort getUserByIdPort) {
         this.listUsersPort = listUsersPort;
         this.registerUserPort = registerUserPort;
         this.updateProfilePort = updateProfilePort;
-        this.getUserPort = getUserPort;
+        this.getUserByIdAndEmailPort = getUserPort;
+        this.getUserByIdPort = getUserByIdPort;
     }
 
     @GetMapping
@@ -77,19 +80,31 @@ public class UserController {
             @RequestParam Long id,
             @RequestParam String email) {
         try {
-            User user = getUserPort.getUserByIdAndEmail(id, email);
+            User user = getUserByIdAndEmailPort.getUserByIdAndEmail(id, email);
             return ResponseEntity.ok(UserMapperDtos.toFullDto(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+    @GetMapping(params = {"id"})
+    public ResponseEntity<?> getUserById(
+            @RequestParam Long id) {
+        try {
+            User user = getUserByIdPort.getUserById(id);
+            return ResponseEntity.ok(UserMapperDtos.toFullDto(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+
     @GetMapping(value = "/tournaments", params = {"id", "email"})
     public ResponseEntity<?> getTournamentsByUserIdandEmail(
             @RequestParam Long id,
             @RequestParam String Email) {
         try {
-            List<Tournament> tournaments = this.getUserPort.getUserByIdAndEmail(id, Email).getTournaments();
+            List<Tournament> tournaments = this.getUserByIdAndEmailPort.getUserByIdAndEmail(id, Email).getTournaments();
             return ResponseEntity.ok(tournaments);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

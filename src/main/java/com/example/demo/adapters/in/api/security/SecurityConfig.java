@@ -44,7 +44,8 @@ public class SecurityConfig {
             throws Exception {
         return http.authorizeHttpRequests((authz) -> authz
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()// sacar
-                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ORGANIZER")
+                .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/profile").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/by-id-and-email").permitAll()

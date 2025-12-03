@@ -2,14 +2,14 @@ package com.example.demo.core.application.usecase;
 
 import com.example.demo.core.domain.models.User;
 import com.example.demo.core.domain.services.ValidateUserService;
-import com.example.demo.core.ports.in.GetUserPort;
+import com.example.demo.core.ports.in.GetUserByIdAndEmailPort;
 import com.example.demo.core.ports.out.UserRepositoryPort;
 
-public class GetUserUseCase implements GetUserPort {
+public class GetUserByIdAndEmailUseCase implements GetUserByIdAndEmailPort {
 
     private final UserRepositoryPort repo;
 
-    public GetUserUseCase(UserRepositoryPort userRepository) {
+    public GetUserByIdAndEmailUseCase(UserRepositoryPort userRepository) {
         this.repo = userRepository;
     }
 
@@ -25,5 +25,7 @@ public class GetUserUseCase implements GetUserPort {
         }
         return user;
     }
+
+    
 
 }

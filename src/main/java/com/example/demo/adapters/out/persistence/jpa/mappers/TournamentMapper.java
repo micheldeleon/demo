@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.example.demo.adapters.out.persistence.jpa.entities.TournamentJpaEntity;
-import com.example.demo.core.domain.models.Discipline;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.User;
 
