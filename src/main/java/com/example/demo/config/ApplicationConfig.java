@@ -8,6 +8,7 @@ import com.example.demo.core.application.usecase.CreateTournamentUseCase;
 import com.example.demo.core.application.usecase.GetAllTournamentsUseCase;
 import com.example.demo.core.application.usecase.GetTournamentUseCase;
 import com.example.demo.core.application.usecase.GetUserByIdAndEmailUseCase;
+import com.example.demo.core.application.usecase.GetUserByIdUseCase;
 import com.example.demo.core.application.usecase.ListDisciplinesUseCase;
 import com.example.demo.core.application.usecase.ListFormatsByDisciplineUseCase;
 import com.example.demo.core.application.usecase.ListUsersUseCase;
@@ -17,6 +18,7 @@ import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
 import com.example.demo.core.ports.in.GetTournamentPort;
 import com.example.demo.core.ports.in.GetUserByIdAndEmailPort;
+import com.example.demo.core.ports.in.GetUserByIdPort;
 import com.example.demo.core.ports.in.ListDisciplinesPort;
 import com.example.demo.core.ports.in.ListFormatsByDisciplinePort;
 import com.example.demo.core.ports.in.ListUsersPort;
@@ -56,10 +58,10 @@ public class ApplicationConfig {
         return new GetUserByIdAndEmailUseCase(userRepositoryPort);
     }
 
-    // @Bean
-    // public GetUserByIdPort GetUserByIdPort(UserRepositoryPort userRepositoryPort) {
-    //     return new GetUserUseCase(userRepositoryPort);
-    // }
+    @Bean
+    public GetUserByIdPort GetUserByIdPort(UserRepositoryPort userRepositoryPort) {
+        return new GetUserByIdUseCase(userRepositoryPort);
+    }
 
     @Bean
     public CreateTournamentPort CreateTournamentPort(TournamentRepositoryPort saveTournamentPort) {
@@ -75,16 +77,19 @@ public class ApplicationConfig {
     public ListFormatsByDisciplinePort ListFormatsByDisciplinePort(FormatRepositoryPort formatRepositoryPort) {
         return new ListFormatsByDisciplineUseCase(formatRepositoryPort);
     }
+
     @Bean
-    public GetTournamentPort GetTournamentPort(TournamentRepositoryPort repo){
+    public GetTournamentPort GetTournamentPort(TournamentRepositoryPort repo) {
         return new GetTournamentUseCase(repo);
     }
+
     @Bean
-    public GetAllTournamentsPort GetAllTournamentsPort(TournamentRepositoryPort repo){
+    public GetAllTournamentsPort GetAllTournamentsPort(TournamentRepositoryPort repo) {
         return new GetAllTournamentsUseCase(repo);
     }
+
     @Bean
-    public GetTournamentByIdUseCase GetTournamentById(TournamentRepositoryPort repo){
+    public GetTournamentByIdUseCase GetTournamentById(TournamentRepositoryPort repo) {
         return new GetTournamentByIdUseCase(repo);
     }
 }

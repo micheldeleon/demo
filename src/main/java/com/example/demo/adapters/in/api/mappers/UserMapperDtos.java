@@ -5,6 +5,7 @@ import com.example.demo.adapters.in.api.dto.UserRegisterDto;
 import com.example.demo.adapters.in.api.dto.UserResponseDTO;
 import com.example.demo.core.domain.models.Department;
 import com.example.demo.core.domain.models.User;
+import com.example.demo.core.domain.models.Organizer;
 
 public class UserMapperDtos {
 
@@ -30,6 +31,12 @@ public class UserMapperDtos {
 
     public static UserFullDto toFullDto(User user) {
 
+        double reputation = 0.0;
+        if (user instanceof Organizer) {
+            reputation = ((Organizer) user).getReputationAverage();
+        }
+        Long departmentId = user.getDepartment() != null ? user.getDepartment().getId() : null;
+
         return new UserFullDto(user.getId(),
                 user.getName(),
                 user.getLastName(),
@@ -38,7 +45,8 @@ public class UserMapperDtos {
                 user.getNationalId(),
                 user.getPhoneNumber(),
                 user.getAddress(),
-                user.getDepartment().getId());
+                departmentId,
+                reputation);
     }
 
 }

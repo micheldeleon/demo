@@ -41,4 +41,6 @@ public class UserFullDto {
     private String address;
 
     private Long departmentId;
+
+    private double reputation;
 }
