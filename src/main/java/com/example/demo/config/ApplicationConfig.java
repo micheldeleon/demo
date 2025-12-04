@@ -14,6 +14,7 @@ import com.example.demo.core.application.usecase.ListFormatsByDisciplineUseCase;
 import com.example.demo.core.application.usecase.ListPublicTournamentsUseCase;
 import com.example.demo.core.application.usecase.ListTournamentsByStatusUseCase;
 import com.example.demo.core.application.usecase.ListUsersUseCase;
+import com.example.demo.core.application.usecase.RegisterTeamToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
 import com.example.demo.core.application.usecase.UpdateUserUseCase;
@@ -26,6 +27,7 @@ import com.example.demo.core.ports.in.ListFormatsByDisciplinePort;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
 import com.example.demo.core.ports.in.ListUsersPort;
+import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 import com.example.demo.core.ports.in.RegisterToTournamentPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
@@ -33,6 +35,7 @@ import com.example.demo.core.ports.out.DisciplineRepositoryPort;
 import com.example.demo.core.ports.out.FindTournamentsByStatusPort;
 import com.example.demo.core.ports.out.FindTournamentsPort;
 import com.example.demo.core.ports.out.FormatRepositoryPort;
+import com.example.demo.core.ports.out.TeamRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRepositoryPort;
 import com.example.demo.core.ports.out.UserRepositoryPort;
@@ -110,5 +113,11 @@ public class ApplicationConfig {
     public RegisterToTournamentPort RegisterToTournamentPort(TournamentRepositoryPort tournamentRepositoryPort,
             TournamentRegistrationPort tournamentRegistrationPort) {
         return new RegisterToTournamentUseCase(tournamentRepositoryPort, tournamentRegistrationPort);
+    }
+
+    @Bean
+    public RegisterTeamToTournamentPort RegisterTeamToTournamentPort(TournamentRepositoryPort tournamentRepositoryPort,
+            TeamRegistrationPort teamRegistrationPort) {
+        return new RegisterTeamToTournamentUseCase(tournamentRepositoryPort, teamRegistrationPort);
     }
 }

@@ -2,6 +2,7 @@
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import com.example.demo.adapters.in.api.dto.TournamentResponse;
 import com.example.demo.adapters.in.api.dto.TournamentSummaryResponse;
 import com.example.demo.adapters.in.api.mappers.TournamentMapper;
 import com.example.demo.adapters.in.api.mappers.TournamentSummaryMapper;
+import com.example.demo.adapters.in.api.dto.RegisterTeamRequest;
 import com.example.demo.core.application.usecase.GetTournamentById;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
@@ -28,6 +30,7 @@ import com.example.demo.core.ports.in.GetAllTournamentsPort;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
 import com.example.demo.core.ports.in.RegisterToTournamentPort;
+import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 
 import jakarta.validation.Valid;
 
@@ -41,19 +44,22 @@ public class TournamentController {
     private final ListPublicTournamentsPort listPublicTournamentsPort;
     private final ListTournamentsByStatusPort listTournamentsByStatusPort;
     private final RegisterToTournamentPort registerToTournamentPort;
+    private final RegisterTeamToTournamentPort registerTeamToTournamentPort;
 
     public TournamentController(CreateTournamentPort createTournamentPort,
             GetAllTournamentsPort getAllTournamentsPort,
             GetTournamentById getTournamentById,
             ListPublicTournamentsPort listPublicTournamentsPort,
             ListTournamentsByStatusPort listTournamentsByStatusPort,
-            RegisterToTournamentPort registerToTournamentPort) {
+            RegisterToTournamentPort registerToTournamentPort,
+            RegisterTeamToTournamentPort registerTeamToTournamentPort) {
         this.createTournamentPort = createTournamentPort;
         this.getAllTournamentsPort = getAllTournamentsPort;
         this.getTournamentById = getTournamentById;
         this.listPublicTournamentsPort = listPublicTournamentsPort;
         this.listTournamentsByStatusPort = listTournamentsByStatusPort;
         this.registerToTournamentPort = registerToTournamentPort;
+        this.registerTeamToTournamentPort = registerTeamToTournamentPort;
     }
 
     @PostMapping("/organizer/{organizerId}")
@@ -130,6 +136,24 @@ public class TournamentController {
                             "message", "Inscripción realizada correctamente",
                             "tournamentId", id,
                             "userId", request.userId()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/register/team")
+    public ResponseEntity<?> registerTeamToTournament(@PathVariable Long id,
+            @Valid @RequestBody RegisterTeamRequest request) {
+        try {
+            registerTeamToTournamentPort.registerTeam(id, request.userId(), request.teamName(), request.participants());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of(
+                            "message", "Equipo inscrito correctamente",
+                            "tournamentId", id,
+                            "userId", request.userId(),
+                            "teamName", request.teamName()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalStateException e) {
