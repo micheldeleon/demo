@@ -22,10 +22,14 @@ import com.example.demo.adapters.in.api.dto.TournamentSummaryResponse;
 import com.example.demo.adapters.in.api.mappers.TournamentMapper;
 import com.example.demo.adapters.in.api.mappers.TournamentSummaryMapper;
 import com.example.demo.adapters.in.api.dto.RegisterTeamRequest;
+import com.example.demo.adapters.in.api.dto.TournamentMatchResponse;
 import com.example.demo.core.application.usecase.GetTournamentById;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
+import com.example.demo.core.domain.models.TournamentMatch;
 import com.example.demo.core.ports.in.CreateTournamentPort;
+import com.example.demo.core.ports.in.GenerateEliminationFixturePort;
+import com.example.demo.core.ports.in.GetFixturePort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
@@ -45,6 +49,8 @@ public class TournamentController {
     private final ListTournamentsByStatusPort listTournamentsByStatusPort;
     private final RegisterToTournamentPort registerToTournamentPort;
     private final RegisterTeamToTournamentPort registerTeamToTournamentPort;
+    private final GenerateEliminationFixturePort generateEliminationFixturePort;
+    private final GetFixturePort getFixturePort;
 
     public TournamentController(CreateTournamentPort createTournamentPort,
             GetAllTournamentsPort getAllTournamentsPort,
@@ -52,7 +58,9 @@ public class TournamentController {
             ListPublicTournamentsPort listPublicTournamentsPort,
             ListTournamentsByStatusPort listTournamentsByStatusPort,
             RegisterToTournamentPort registerToTournamentPort,
-            RegisterTeamToTournamentPort registerTeamToTournamentPort) {
+            RegisterTeamToTournamentPort registerTeamToTournamentPort,
+            GenerateEliminationFixturePort generateEliminationFixturePort,
+            GetFixturePort getFixturePort) {
         this.createTournamentPort = createTournamentPort;
         this.getAllTournamentsPort = getAllTournamentsPort;
         this.getTournamentById = getTournamentById;
@@ -60,6 +68,8 @@ public class TournamentController {
         this.listTournamentsByStatusPort = listTournamentsByStatusPort;
         this.registerToTournamentPort = registerToTournamentPort;
         this.registerTeamToTournamentPort = registerTeamToTournamentPort;
+        this.generateEliminationFixturePort = generateEliminationFixturePort;
+        this.getFixturePort = getFixturePort;
     }
 
     @PostMapping("/organizer/{organizerId}")
@@ -158,6 +168,43 @@ public class TournamentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/fixture/elimination")
+    public ResponseEntity<?> generateEliminationFixture(@PathVariable Long id) {
+        try {
+            generateEliminationFixturePort.generate(id);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                    "message", "Fixture eliminatorio generado",
+                    "tournamentId", id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/fixture")
+    public ResponseEntity<?> getFixture(@PathVariable Long id) {
+        try {
+            List<TournamentMatch> matches = getFixturePort.getFixture(id);
+            List<TournamentMatchResponse> response = matches.stream()
+                    .map(m -> new TournamentMatchResponse(
+                            m.getId(),
+                            m.getRound(),
+                            m.getMatchNumber(),
+                            m.getHomeTeamId(),
+                            m.getAwayTeamId(),
+                            m.getWinnerTeamId(),
+                            m.getStatus(),
+                            m.getScoreHome(),
+                            m.getScoreAway(),
+                            m.getScheduledAt()))
+                    .toList();
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

@@ -8,4 +8,6 @@ import com.example.demo.adapters.out.persistence.jpa.entities.TournamentTeamKey;
 
 @Repository
 public interface TournamentTeamRepositoryJpa extends JpaRepository<TournamentTeamEntity, TournamentTeamKey> {
+
+    java.util.List<TournamentTeamEntity> findByTournamentId(Long tournamentId);
 }

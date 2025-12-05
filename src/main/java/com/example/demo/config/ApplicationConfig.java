@@ -14,12 +14,15 @@ import com.example.demo.core.application.usecase.ListFormatsByDisciplineUseCase;
 import com.example.demo.core.application.usecase.ListPublicTournamentsUseCase;
 import com.example.demo.core.application.usecase.ListTournamentsByStatusUseCase;
 import com.example.demo.core.application.usecase.ListUsersUseCase;
+import com.example.demo.core.application.usecase.GenerateEliminationFixtureUseCase;
 import com.example.demo.core.application.usecase.RegisterTeamToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
 import com.example.demo.core.application.usecase.UpdateUserUseCase;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
+import com.example.demo.core.ports.in.GenerateEliminationFixturePort;
+import com.example.demo.core.ports.in.GetFixturePort;
 import com.example.demo.core.ports.in.GetTournamentPort;
 import com.example.demo.core.ports.in.GetUserPort;
 import com.example.demo.core.ports.in.ListDisciplinesPort;
@@ -35,6 +38,7 @@ import com.example.demo.core.ports.out.DisciplineRepositoryPort;
 import com.example.demo.core.ports.out.FindTournamentsByStatusPort;
 import com.example.demo.core.ports.out.FindTournamentsPort;
 import com.example.demo.core.ports.out.FormatRepositoryPort;
+import com.example.demo.core.ports.out.FixturePersistencePort;
 import com.example.demo.core.ports.out.TeamRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRepositoryPort;
@@ -119,5 +123,23 @@ public class ApplicationConfig {
     public RegisterTeamToTournamentPort RegisterTeamToTournamentPort(TournamentRepositoryPort tournamentRepositoryPort,
             TeamRegistrationPort teamRegistrationPort) {
         return new RegisterTeamToTournamentUseCase(tournamentRepositoryPort, teamRegistrationPort);
+    }
+
+    @Bean
+    public GenerateEliminationFixtureUseCase generateEliminationFixtureUseCase(
+            TournamentRepositoryPort tournamentRepositoryPort,
+            FixturePersistencePort fixturePersistencePort) {
+        return new GenerateEliminationFixtureUseCase(tournamentRepositoryPort, fixturePersistencePort);
+    }
+
+    @Bean
+    public GenerateEliminationFixturePort GenerateEliminationFixturePort(
+            GenerateEliminationFixtureUseCase useCase) {
+        return useCase;
+    }
+
+    @Bean
+    public GetFixturePort GetFixturePort(GenerateEliminationFixtureUseCase useCase) {
+        return useCase;
     }
 }
