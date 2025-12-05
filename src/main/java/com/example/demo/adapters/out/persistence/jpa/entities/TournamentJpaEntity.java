@@ -3,6 +3,8 @@ package com.example.demo.adapters.out.persistence.jpa.entities;
 //Mapeo 1:1 a la tabla public.tournaments.
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+
+import com.example.demo.core.domain.models.TournamentStatus;
 
 @Entity
 @Table(name = "tournaments", schema = "public")
@@ -74,4 +78,8 @@ public class TournamentJpaEntity {
 
   @Column(name="registration_cost", nullable=false, precision=10, scale=2)
   private BigDecimal registrationCost;
+  
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status")
+  private TournamentStatus status;
 }

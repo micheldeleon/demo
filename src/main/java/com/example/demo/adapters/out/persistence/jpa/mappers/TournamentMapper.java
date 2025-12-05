@@ -9,6 +9,7 @@ import java.util.Date;
 import com.example.demo.adapters.out.persistence.jpa.entities.TournamentJpaEntity;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.User;
+import com.example.demo.core.domain.models.TournamentStatus;
 
 public class TournamentMapper {
     // -------------------- mapping --------------------
@@ -61,6 +62,8 @@ public class TournamentMapper {
 
         e.setPrize(t.getPrize());
         e.setRegistrationCost(BigDecimal.valueOf(t.getRegistrationCost()));
+        // Persistir el status si viene seteado
+        e.setStatus(t.getStatus());
 
         return e;
     }
@@ -97,7 +100,7 @@ public class TournamentMapper {
         }
         tournament.setMinParticipantsPerTournament(entity.getMinParticipantsTournament());
         tournament.setMaxParticipantsPerTournament(entity.getMaxParticipantsTournament());
-        tournament.setStatus(null);
+        tournament.setStatus(entity.getStatus());
         return tournament;
     }
 
