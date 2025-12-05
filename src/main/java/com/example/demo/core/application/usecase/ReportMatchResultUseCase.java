@@ -76,6 +76,8 @@ public class ReportMatchResultUseCase implements ReportMatchResultPort {
         match.setUpdatedAt(now);
         fixturePersistencePort.saveMatch(match);
 
+        // Avanzar al siguiente partido en la ronda. Lo defino abajo en un método aparte para
+        // mayor claridad.
         advanceToNextRound(match, winnerTeamId, now);
     }
 
