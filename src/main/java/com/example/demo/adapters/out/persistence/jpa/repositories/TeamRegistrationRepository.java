@@ -4,6 +4,9 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +45,20 @@ public class TeamRegistrationRepository implements TeamRegistrationPort {
     public void registerTeam(Long tournamentId, Long creatorUserId, String teamName, Long disciplineId,
             List<ParticipantRequest> participants) {
 
+        // Equipos ya inscritos en el torneo (para validar duplicados de nationalId)
+        List<Long> teamIdsInTournament = tournamentTeamRepositoryJpa.findByTournamentId(tournamentId)
+                .stream()
+                .map(tt -> tt.getTeamId())
+                .collect(Collectors.toList());
+
+        // Validar duplicados en la misma solicitud
+        Set<String> nationalIdsInRequest = participants.stream()
+                .map(ParticipantRequest::nationalId)
+                .collect(Collectors.toSet());
+        if (nationalIdsInRequest.size() != participants.size()) {
+            throw new IllegalArgumentException("Hay participantes con nationalId repetido en el equipo");
+        }
+
         TeamEntity team = new TeamEntity();
         team.setName(teamName);
         team.setCreatorId(creatorUserId);
@@ -51,9 +68,24 @@ public class TeamRegistrationRepository implements TeamRegistrationPort {
 
         List<TeamParticipantEntity> teamParticipantEntities = new ArrayList<>();
         for (ParticipantRequest participant : participants) {
-            ParticipantEntity pEntity = new ParticipantEntity();
-            pEntity.setFullName(participant.fullName());
-            pEntity.setNationalId(participant.nationalId());
+            Optional<ParticipantEntity> existing = participantRepositoryJpa.findByNationalId(participant.nationalId());
+
+            if (existing.isPresent() && !teamIdsInTournament.isEmpty()) {
+                boolean alreadyInTournament = teamParticipantRepositoryJpa
+                        .existsByParticipantIdAndTeamIdIn(existing.get().getId(), teamIdsInTournament);
+                if (alreadyInTournament) {
+                    throw new IllegalStateException("El participante con nationalId " + participant.nationalId()
+                            + " ya está inscrito en este torneo");
+                }
+            }
+
+            ParticipantEntity pEntity = existing.orElseGet(() -> {
+                ParticipantEntity p = new ParticipantEntity();
+                p.setFullName(participant.fullName());
+                p.setNationalId(participant.nationalId());
+                return p;
+            });
+
             pEntity = participantRepositoryJpa.save(pEntity);
 
             TeamParticipantEntity tp = new TeamParticipantEntity(team.getId(), pEntity.getId());

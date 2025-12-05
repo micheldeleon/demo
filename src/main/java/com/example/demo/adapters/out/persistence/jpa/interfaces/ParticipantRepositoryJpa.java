@@ -7,4 +7,6 @@ import com.example.demo.adapters.out.persistence.jpa.entities.ParticipantEntity;
 
 @Repository
 public interface ParticipantRepositoryJpa extends JpaRepository<ParticipantEntity, Long> {
+
+    java.util.Optional<ParticipantEntity> findByNationalId(String nationalId);
 }
