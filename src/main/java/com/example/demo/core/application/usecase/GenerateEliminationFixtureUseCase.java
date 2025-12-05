@@ -64,7 +64,10 @@ public class GenerateEliminationFixtureUseCase implements GenerateEliminationFix
             teamIds.add(null); // bye
         }
 
+        //Metodo para construir el fixture en formato eliminatorio
+        //buildBracket(...) arma la ronda 1 emparejando de dos en dos y marca byes; devuelve solo la primera ronda (las siguientes se crearán al reportar resultados).
         List<TournamentMatch> matches = buildBracket(tournamentId, teamIds);
+        // Guardamos los partidos generados
         fixturePersistencePort.saveMatches(matches);
     }
 

@@ -13,4 +13,10 @@ public interface FixturePersistencePort {
     void saveMatches(List<TournamentMatch> matches);
 
     List<TournamentMatch> findByTournament(Long tournamentId);
+
+    TournamentMatch getMatch(Long matchId);
+
+    void saveMatch(TournamentMatch match);
+
+    TournamentMatch findByTournamentRoundAndNumber(Long tournamentId, int round, int matchNumber);
 }

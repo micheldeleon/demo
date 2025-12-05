@@ -54,4 +54,24 @@ public class FixturePersistenceRepository implements FixturePersistencePort {
                 .map(TournamentMatchMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public TournamentMatch getMatch(Long matchId) {
+        return tournamentMatchRepositoryJpa.findById(matchId)
+                .map(TournamentMatchMapper::toDomain)
+                .orElse(null);
+    }
+
+    @Override
+    public void saveMatch(TournamentMatch match) {
+        TournamentMatchEntity entity = TournamentMatchMapper.toEntity(match);
+        tournamentMatchRepositoryJpa.save(entity);
+    }
+
+    @Override
+    public TournamentMatch findByTournamentRoundAndNumber(Long tournamentId, int round, int matchNumber) {
+        TournamentMatchEntity entity = tournamentMatchRepositoryJpa
+                .findByTournamentIdAndRoundAndMatchNumber(tournamentId, round, matchNumber);
+        return entity != null ? TournamentMatchMapper.toDomain(entity) : null;
+    }
 }

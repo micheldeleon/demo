@@ -18,6 +18,7 @@ import com.example.demo.core.application.usecase.GenerateEliminationFixtureUseCa
 import com.example.demo.core.application.usecase.RegisterTeamToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
+import com.example.demo.core.application.usecase.ReportMatchResultUseCase;
 import com.example.demo.core.application.usecase.UpdateUserUseCase;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
@@ -33,6 +34,7 @@ import com.example.demo.core.ports.in.ListUsersPort;
 import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 import com.example.demo.core.ports.in.RegisterToTournamentPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
+import com.example.demo.core.ports.in.ReportMatchResultPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
 import com.example.demo.core.ports.out.DisciplineRepositoryPort;
 import com.example.demo.core.ports.out.FindTournamentsByStatusPort;
@@ -141,5 +143,11 @@ public class ApplicationConfig {
     @Bean
     public GetFixturePort GetFixturePort(GenerateEliminationFixtureUseCase useCase) {
         return useCase;
+    }
+
+    @Bean
+    public ReportMatchResultPort ReportMatchResultPort(FixturePersistencePort fixturePersistencePort,
+            TournamentRepositoryPort tournamentRepositoryPort) {
+        return new ReportMatchResultUseCase(fixturePersistencePort, tournamentRepositoryPort);
     }
 }

@@ -49,7 +49,7 @@ public class TournamentMatchMapper {
     }
 
     private static OffsetDateTime toOdt(Date date) {
-        return date == null ? OffsetDateTime.now(ZoneOffset.UTC) : date.toInstant().atOffset(ZoneOffset.UTC);
+        return date == null ? null : date.toInstant().atOffset(ZoneOffset.UTC);
     }
 
     private static Date fromOdt(OffsetDateTime odt) {

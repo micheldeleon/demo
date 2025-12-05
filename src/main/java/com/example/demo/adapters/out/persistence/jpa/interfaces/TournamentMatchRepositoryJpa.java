@@ -13,4 +13,6 @@ public interface TournamentMatchRepositoryJpa extends JpaRepository<TournamentMa
     boolean existsByTournamentId(Long tournamentId);
 
     List<TournamentMatchEntity> findByTournamentIdOrderByRoundAscMatchNumberAsc(Long tournamentId);
+
+    TournamentMatchEntity findByTournamentIdAndRoundAndMatchNumber(Long tournamentId, int round, int matchNumber);
 }
