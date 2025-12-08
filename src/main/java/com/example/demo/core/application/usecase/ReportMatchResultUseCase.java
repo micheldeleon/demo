@@ -82,6 +82,11 @@ public class ReportMatchResultUseCase implements ReportMatchResultPort {
     }
 
     private void advanceToNextRound(TournamentMatch match, Long winnerTeamId, Date now) {
+        long matchesThisRound = fixturePersistencePort.countByTournamentAndRound(match.getTournamentId(), match.getRound());
+        if (matchesThisRound <= 1) {
+            return; // Final: no siguiente ronda
+        }
+
         int nextRound = match.getRound() + 1;
         int nextMatchNumber = (match.getMatchNumber() + 1) / 2;
         boolean winnerGoesAsHome = (match.getMatchNumber() % 2 == 1); // impar -> home, par -> away

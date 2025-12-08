@@ -15,4 +15,6 @@ public interface TournamentMatchRepositoryJpa extends JpaRepository<TournamentMa
     List<TournamentMatchEntity> findByTournamentIdOrderByRoundAscMatchNumberAsc(Long tournamentId);
 
     TournamentMatchEntity findByTournamentIdAndRoundAndMatchNumber(Long tournamentId, int round, int matchNumber);
+
+    long countByTournamentIdAndRound(Long tournamentId, int round);
 }

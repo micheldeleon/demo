@@ -74,4 +74,9 @@ public class FixturePersistenceRepository implements FixturePersistencePort {
                 .findByTournamentIdAndRoundAndMatchNumber(tournamentId, round, matchNumber);
         return entity != null ? TournamentMatchMapper.toDomain(entity) : null;
     }
+
+    @Override
+    public int countByTournamentAndRound(Long tournamentId, int round) {
+        return (int) tournamentMatchRepositoryJpa.countByTournamentIdAndRound(tournamentId, round);
+    }
 }
