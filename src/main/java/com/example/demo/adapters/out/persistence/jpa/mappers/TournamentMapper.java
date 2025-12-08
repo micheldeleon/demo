@@ -6,8 +6,8 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.example.demo.adapters.out.persistence.jpa.entities.DisciplineEntity;
 import com.example.demo.adapters.out.persistence.jpa.entities.TournamentJpaEntity;
-import com.example.demo.core.domain.models.Discipline;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
 import com.example.demo.core.domain.models.User;
@@ -19,7 +19,9 @@ public class TournamentMapper {
         e.setId(t.getId());
         e.setName(t.getName());
 
-        e.setDisciplineId(t.getDiscipline() != null ? t.getDiscipline().getId() : null);
+        e.setDiscipline(t.getDiscipline() != null && t.getDiscipline().getId() != null
+                ? new DisciplineEntity(t.getDiscipline().getId(), null, false)
+                : null);
 
         if (t.getFormat() != null && t.getFormat().getId() != null) {
             var formatRef = new com.example.demo.adapters.out.persistence.jpa.entities.FormatEntity();
@@ -63,9 +65,7 @@ public class TournamentMapper {
         Tournament tournament = new Tournament();
         tournament.setId(entity.getId());
         tournament.setTeams(new ArrayList<>());
-        tournament.setDiscipline(entity.getDisciplineId() != null
-                ? new Discipline(entity.getDisciplineId(), false, null, null)
-                : null);
+        tournament.setDiscipline(entity.getDiscipline() != null ? DisciplineMapper.toDomain(entity.getDiscipline()) : null);
         tournament.setFormat(entity.getFormat() != null ? FormatMapper.toDomain(entity.getFormat()) : null);
         tournament.setName(entity.getName());
         tournament.setCreatedAt(fromOdt(entity.getCreatedAt()));

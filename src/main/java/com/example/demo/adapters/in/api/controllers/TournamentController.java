@@ -23,13 +23,13 @@ import com.example.demo.adapters.in.api.mappers.TournamentMapper;
 import com.example.demo.adapters.in.api.mappers.TournamentSummaryMapper;
 import com.example.demo.adapters.in.api.dto.RegisterTeamRequest;
 import com.example.demo.adapters.in.api.dto.TournamentMatchResponse;
-import com.example.demo.core.application.usecase.GetTournamentById;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
 import com.example.demo.core.domain.models.TournamentMatch;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GenerateEliminationFixturePort;
 import com.example.demo.core.ports.in.GetFixturePort;
+import com.example.demo.core.ports.in.GetTournamentByIdPort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
@@ -45,7 +45,7 @@ public class TournamentController {
 
     private final CreateTournamentPort createTournamentPort;
     private final GetAllTournamentsPort getAllTournamentsPort;
-    private final GetTournamentById getTournamentById;
+    private final GetTournamentByIdPort getTournamentById;
     private final ListPublicTournamentsPort listPublicTournamentsPort;
     private final ListTournamentsByStatusPort listTournamentsByStatusPort;
     private final RegisterToTournamentPort registerToTournamentPort;
@@ -56,7 +56,7 @@ public class TournamentController {
 
     public TournamentController(CreateTournamentPort createTournamentPort,
             GetAllTournamentsPort getAllTournamentsPort,
-            GetTournamentById getTournamentById,
+            GetTournamentByIdPort getTournamentById,
             ListPublicTournamentsPort listPublicTournamentsPort,
             ListTournamentsByStatusPort listTournamentsByStatusPort,
             RegisterToTournamentPort registerToTournamentPort,

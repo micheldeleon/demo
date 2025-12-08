@@ -22,58 +22,63 @@ import com.example.demo.adapters.out.persistence.jpa.entities.FormatEntity;
 
 @Entity
 @Table(name = "tournaments", schema = "public")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 public class TournamentJpaEntity {
-    @Id
+  @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name="discipline_id", nullable=false)
-  private Long disciplineId;
+  @ManyToOne
+  @JoinColumn(name = "discipline_id", nullable = false)
+  private DisciplineEntity discipline;
 
   @ManyToOne
   @JoinColumn(name = "format_id")
   private FormatEntity format;
 
-  @Column(name="organizer_id", nullable=false)
+  @Column(name = "organizer_id", nullable = false)
   private Long organizerId;
 
-  @Column(nullable=false)
+  @Column(nullable = false)
   private String name;
 
-  @Column(name="created_at", nullable=false)
+  @Column(name = "created_at", nullable = false)
   private OffsetDateTime createdAt;
 
-  @Column(name="start_at")
+  @Column(name = "start_at")
   private OffsetDateTime startAt;
 
-  @Column(name="end_at")
+  @Column(name = "end_at")
   private OffsetDateTime endAt;
 
-  @Column(name="registration_deadline")
+  @Column(name = "registration_deadline")
   private OffsetDateTime registrationDeadline;
 
-  @Column(name="private_tournament", nullable=false)
+  @Column(name = "private_tournament", nullable = false)
   private boolean privateTournament;
 
   private String password;
 
-  @Column(name="min_participants_per_team", nullable=false)
+  @Column(name = "min_participants_per_team", nullable = false)
   private Integer minParticipantsPerTeam;
 
-  @Column(name="max_participants_per_team", nullable=false)
+  @Column(name = "max_participants_per_team", nullable = false)
   private Integer maxParticipantsPerTeam;
 
-  @Column(name="min_participants_tournament")
+  @Column(name = "min_participants_tournament")
   private Integer minParticipantsTournament;
 
-  @Column(name="max_participants_tournament")
+  @Column(name = "max_participants_tournament")
   private Integer maxParticipantsTournament;
 
   private String prize;
 
-  @Column(name="registration_cost", nullable=false, precision=10, scale=2)
+  @Column(name = "registration_cost", nullable = false, precision = 10, scale = 2)
   private BigDecimal registrationCost;
 
   @Column(name = "status", nullable = false)

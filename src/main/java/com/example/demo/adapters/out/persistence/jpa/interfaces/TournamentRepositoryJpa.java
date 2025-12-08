@@ -11,26 +11,32 @@ import com.example.demo.adapters.out.persistence.jpa.entities.TournamentJpaEntit
 
 public interface TournamentRepositoryJpa extends JpaRepository<TournamentJpaEntity, Long> {
 
-    @Query("""
-            SELECT t FROM TournamentJpaEntity t
-            WHERE (:status IS NULL OR t.status = :status)
-              AND (:disciplineId IS NULL OR t.disciplineId = :disciplineId)
-              AND (:namePattern = '' OR LOWER(t.name) LIKE :namePattern)
-              AND (:startFrom IS NULL OR t.startAt >= :startFrom)
-              AND (:startTo IS NULL OR t.startAt <= :startTo)
-              AND (:withPrize IS NULL OR (:withPrize = TRUE AND t.prize IS NOT NULL AND t.prize <> '')
-                                   OR (:withPrize = FALSE AND (t.prize IS NULL OR t.prize = '')))
-              AND (:withCost IS NULL OR (:withCost = TRUE AND t.registrationCost > 0)
-                                   OR (:withCost = FALSE AND t.registrationCost = 0))
-            """)
-    List<TournamentJpaEntity> findByFilters(
-            @Param("status") String status,
-            @Param("disciplineId") Long disciplineId,
-            @Param("namePattern") String namePattern,
-            @Param("startFrom") OffsetDateTime startFrom,
-            @Param("startTo") OffsetDateTime startTo,
-            @Param("withPrize") Boolean withPrize,
-            @Param("withCost") Boolean withCost);
+        @Query("""
+                            SELECT t FROM TournamentJpaEntity t
+                            WHERE (:status IS NULL OR t.status = :status)
+                              AND (:disciplineId IS NULL OR t.discipline.id = :disciplineId)
+                              AND (:namePattern = '' OR LOWER(t.name) LIKE :namePattern)
+                              AND (:startFrom IS NULL OR t.startAt >= :startFrom)
+                              AND (:startTo IS NULL OR t.startAt <= :startTo)
+                              AND (
+                                    :withPrize IS NULL
+                                    OR (:withPrize = TRUE AND t.prize IS NOT NULL AND t.prize <> '')
+                                    OR (:withPrize = FALSE AND (t.prize IS NULL OR t.prize = ''))
+                                  )
+                              AND (
+                                    :withCost IS NULL
+                                    OR (:withCost = TRUE AND t.registrationCost > 0)
+                                    OR (:withCost = FALSE AND t.registrationCost = 0)
+                                  )
+                        """)
+        List<TournamentJpaEntity> findByFilters(
+                        @Param("status") String status,
+                        @Param("disciplineId") Long disciplineId,
+                        @Param("namePattern") String namePattern,
+                        @Param("startFrom") OffsetDateTime startFrom,
+                        @Param("startTo") OffsetDateTime startTo,
+                        @Param("withPrize") Boolean withPrize,
+                        @Param("withCost") Boolean withCost);
 
-    List<TournamentJpaEntity> findByStatus(String status);
+        List<TournamentJpaEntity> findByStatus(String status);
 }

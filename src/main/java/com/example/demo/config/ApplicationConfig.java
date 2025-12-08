@@ -6,9 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import com.example.demo.adapters.out.persistence.jpa.mappers.UserMapper;
 import com.example.demo.core.application.usecase.CreateTournamentUseCase;
 import com.example.demo.core.application.usecase.GetAllTournamentsUseCase;
-import com.example.demo.core.application.usecase.GetTournamentById;
+import com.example.demo.core.application.usecase.GetTournamentByIdUseCase;
 import com.example.demo.core.application.usecase.GetTournamentUseCase;
-import com.example.demo.core.application.usecase.GetUserUseCase;
+import com.example.demo.core.application.usecase.GetUserByIdAndEmailUseCase;
+import com.example.demo.core.application.usecase.GetUserByIdUseCase;
 import com.example.demo.core.application.usecase.ListDisciplinesUseCase;
 import com.example.demo.core.application.usecase.ListFormatsByDisciplineUseCase;
 import com.example.demo.core.application.usecase.ListPublicTournamentsUseCase;
@@ -22,8 +23,10 @@ import com.example.demo.core.application.usecase.ReportMatchResultUseCase;
 import com.example.demo.core.application.usecase.UpdateUserUseCase;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
+import com.example.demo.core.ports.in.GetTournamentByIdPort;
 import com.example.demo.core.ports.in.GetTournamentPort;
-import com.example.demo.core.ports.in.GetUserPort;
+import com.example.demo.core.ports.in.GetUserByIdAndEmailPort;
+import com.example.demo.core.ports.in.GetUserByIdPort;
 import com.example.demo.core.ports.in.ListDisciplinesPort;
 import com.example.demo.core.ports.in.ListFormatsByDisciplinePort;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
@@ -68,8 +71,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public GetUserPort GetUserPort(UserRepositoryPort userRepositoryPort) {
-        return new GetUserUseCase(userRepositoryPort);
+    public GetUserByIdPort GetUserPort(UserRepositoryPort userRepositoryPort) {
+        return new GetUserByIdUseCase(userRepositoryPort);
     }
 
     @Bean
@@ -109,8 +112,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public GetTournamentById GetTournamentById(TournamentRepositoryPort repo) {
-        return new GetTournamentById(repo);
+    public GetTournamentByIdPort getTournamentById(TournamentRepositoryPort tournamentRepositoryPort) {
+        return new GetTournamentByIdUseCase(tournamentRepositoryPort);
     }
 
     @Bean
@@ -136,5 +139,10 @@ public class ApplicationConfig {
     public ReportMatchResultPort ReportMatchResultPort(FixturePersistencePort fixturePersistencePort,
             TournamentRepositoryPort tournamentRepositoryPort) {
         return new ReportMatchResultUseCase(fixturePersistencePort, tournamentRepositoryPort);
+    }
+
+    @Bean
+    public GetUserByIdAndEmailPort getUserByIdAndEmailPort(UserRepositoryPort userRepositoryPort) {
+        return new GetUserByIdAndEmailUseCase(userRepositoryPort);
     }
 }
