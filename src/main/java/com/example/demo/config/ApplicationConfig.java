@@ -16,6 +16,7 @@ import com.example.demo.core.application.usecase.ListPublicTournamentsUseCase;
 import com.example.demo.core.application.usecase.ListTournamentsByStatusUseCase;
 import com.example.demo.core.application.usecase.ListUsersUseCase;
 import com.example.demo.core.application.usecase.GenerateEliminationFixtureUseCase;
+import com.example.demo.core.application.usecase.RegisterRunnerToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterTeamToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
@@ -32,6 +33,7 @@ import com.example.demo.core.ports.in.ListFormatsByDisciplinePort;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
 import com.example.demo.core.ports.in.ListUsersPort;
+import com.example.demo.core.ports.in.RegisterRunnerToTournamentPort;
 import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 import com.example.demo.core.ports.in.RegisterToTournamentPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
@@ -126,6 +128,15 @@ public class ApplicationConfig {
     public RegisterTeamToTournamentPort RegisterTeamToTournamentPort(TournamentRepositoryPort tournamentRepositoryPort,
             TeamRegistrationPort teamRegistrationPort) {
         return new RegisterTeamToTournamentUseCase(tournamentRepositoryPort, teamRegistrationPort);
+    }
+
+    @Bean
+    public RegisterRunnerToTournamentPort registerRunnerToTournamentPort(
+            TournamentRepositoryPort tournamentRepositoryPort,
+            TeamRegistrationPort teamRegistrationPort,
+            UserRepositoryPort userRepositoryPort) {
+        return new RegisterRunnerToTournamentUseCase(tournamentRepositoryPort, teamRegistrationPort,
+                userRepositoryPort);
     }
 
     @Bean

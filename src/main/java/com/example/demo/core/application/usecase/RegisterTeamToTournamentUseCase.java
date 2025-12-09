@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.demo.adapters.in.api.dto.ParticipantRequest;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
+import com.example.demo.core.domain.models.Formats.RaceFormat;
 import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 import com.example.demo.core.ports.out.TeamRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRepositoryPort;
@@ -35,13 +36,17 @@ public class RegisterTeamToTournamentUseCase implements RegisterTeamToTournament
             throw new IllegalArgumentException("Torneo no encontrado");
         }
 
+        if (tournament.getFormat() instanceof RaceFormat && participants.size() != 1) {
+            throw new IllegalStateException("Para formato carrera solo se permite un participante por equipo");
+        }
+
         if (tournament.getStatus() != TournamentStatus.ABIERTO) {
-            throw new IllegalStateException("El torneo no está abierto para inscripciones");
+            throw new IllegalStateException("El torneo no esta abierto para inscripciones");
         }
 
         Date now = new Date();
         if (tournament.getRegistrationDeadline() != null && tournament.getRegistrationDeadline().before(now)) {
-            throw new IllegalStateException("El torneo ya cerró inscripciones");
+            throw new IllegalStateException("El torneo ya cerro inscripciones");
         }
 
         Long disciplineId = tournament.getDiscipline() != null ? tournament.getDiscipline().getId() : null;

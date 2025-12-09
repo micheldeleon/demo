@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.adapters.in.api.dto.CreateTournamentRequest;
 import com.example.demo.adapters.in.api.dto.RegisterToTournamentRequest;
+import com.example.demo.adapters.in.api.dto.RunnerRegistrationRequest;
 import com.example.demo.adapters.in.api.dto.TournamentResponse;
 import com.example.demo.adapters.in.api.dto.TournamentSummaryResponse;
 import com.example.demo.adapters.in.api.mappers.TournamentMapper;
@@ -34,6 +36,7 @@ import com.example.demo.core.ports.in.GetAllTournamentsPort;
 import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
 import com.example.demo.core.ports.in.RegisterToTournamentPort;
+import com.example.demo.core.ports.in.RegisterRunnerToTournamentPort;
 import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 import com.example.demo.core.ports.in.ReportMatchResultPort;
 
@@ -49,6 +52,7 @@ public class TournamentController {
     private final ListPublicTournamentsPort listPublicTournamentsPort;
     private final ListTournamentsByStatusPort listTournamentsByStatusPort;
     private final RegisterToTournamentPort registerToTournamentPort;
+    private final RegisterRunnerToTournamentPort registerRunnerToTournamentPort;
     private final RegisterTeamToTournamentPort registerTeamToTournamentPort;
     private final GenerateEliminationFixturePort generateEliminationFixturePort;
     private final GetFixturePort getFixturePort;
@@ -60,6 +64,7 @@ public class TournamentController {
             ListPublicTournamentsPort listPublicTournamentsPort,
             ListTournamentsByStatusPort listTournamentsByStatusPort,
             RegisterToTournamentPort registerToTournamentPort,
+            RegisterRunnerToTournamentPort registerRunnerToTournamentPort,
             RegisterTeamToTournamentPort registerTeamToTournamentPort,
             GenerateEliminationFixturePort generateEliminationFixturePort,
             GetFixturePort getFixturePort,
@@ -70,6 +75,7 @@ public class TournamentController {
         this.listPublicTournamentsPort = listPublicTournamentsPort;
         this.listTournamentsByStatusPort = listTournamentsByStatusPort;
         this.registerToTournamentPort = registerToTournamentPort;
+        this.registerRunnerToTournamentPort = registerRunnerToTournamentPort;
         this.registerTeamToTournamentPort = registerTeamToTournamentPort;
         this.generateEliminationFixturePort = generateEliminationFixturePort;
         this.getFixturePort = getFixturePort;
@@ -150,6 +156,25 @@ public class TournamentController {
                             "message", "Inscripción realizada correctamente",
                             "tournamentId", id,
                             "userId", request.userId()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/register/runner")
+    public ResponseEntity<?> registerRunnerToTournament(@PathVariable Long id,
+            Authentication authentication,
+            @RequestBody(required = false) RunnerRegistrationRequest request) {
+        try {
+            String userEmail = authentication != null ? authentication.getName() : null;
+            registerRunnerToTournamentPort.register(id, userEmail, request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of(
+                            "message", "Inscripcion a carrera registrada",
+                            "tournamentId", id,
+                            "userEmail", userEmail));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalStateException e) {
