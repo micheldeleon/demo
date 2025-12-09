@@ -27,12 +27,15 @@ import com.example.demo.adapters.in.api.dto.RegisterTeamRequest;
 import com.example.demo.adapters.in.api.dto.TournamentMatchResponse;
 import com.example.demo.adapters.in.api.dto.RaceResultRequest;
 import com.example.demo.adapters.in.api.dto.RaceResultResponse;
+import com.example.demo.adapters.in.api.dto.LeagueMatchResultRequest;
+import com.example.demo.adapters.in.api.dto.LeagueStandingResponse;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
 import com.example.demo.core.domain.models.TournamentMatch;
 import com.example.demo.core.domain.models.RaceResult;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GenerateEliminationFixturePort;
+import com.example.demo.core.ports.in.GenerateLeagueFixturePort;
 import com.example.demo.core.ports.in.GetFixturePort;
 import com.example.demo.core.ports.in.GetTournamentByIdPort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
@@ -44,6 +47,8 @@ import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 import com.example.demo.core.ports.in.ReportMatchResultPort;
 import com.example.demo.core.ports.in.ReportRaceResultsPort;
 import com.example.demo.core.ports.in.GetRaceResultsPort;
+import com.example.demo.core.ports.in.ReportLeagueMatchResultPort;
+import com.example.demo.core.ports.in.GetLeagueStandingsPort;
 
 import jakarta.validation.Valid;
 
@@ -60,10 +65,13 @@ public class TournamentController {
     private final RegisterRunnerToTournamentPort registerRunnerToTournamentPort;
     private final RegisterTeamToTournamentPort registerTeamToTournamentPort;
     private final GenerateEliminationFixturePort generateEliminationFixturePort;
+    private final GenerateLeagueFixturePort generateLeagueFixturePort;
     private final GetFixturePort getFixturePort;
     private final ReportMatchResultPort reportMatchResultPort;
+    private final ReportLeagueMatchResultPort reportLeagueMatchResultPort;
     private final ReportRaceResultsPort reportRaceResultsPort;
     private final GetRaceResultsPort getRaceResultsPort;
+    private final GetLeagueStandingsPort getLeagueStandingsPort;
 
     public TournamentController(CreateTournamentPort createTournamentPort,
             GetAllTournamentsPort getAllTournamentsPort,
@@ -74,10 +82,13 @@ public class TournamentController {
             RegisterRunnerToTournamentPort registerRunnerToTournamentPort,
             RegisterTeamToTournamentPort registerTeamToTournamentPort,
             GenerateEliminationFixturePort generateEliminationFixturePort,
+            GenerateLeagueFixturePort generateLeagueFixturePort,
             GetFixturePort getFixturePort,
             ReportMatchResultPort reportMatchResultPort,
+            ReportLeagueMatchResultPort reportLeagueMatchResultPort,
             ReportRaceResultsPort reportRaceResultsPort,
-            GetRaceResultsPort getRaceResultsPort) {
+            GetRaceResultsPort getRaceResultsPort,
+            GetLeagueStandingsPort getLeagueStandingsPort) {
         this.createTournamentPort = createTournamentPort;
         this.getAllTournamentsPort = getAllTournamentsPort;
         this.getTournamentById = getTournamentById;
@@ -87,10 +98,13 @@ public class TournamentController {
         this.registerRunnerToTournamentPort = registerRunnerToTournamentPort;
         this.registerTeamToTournamentPort = registerTeamToTournamentPort;
         this.generateEliminationFixturePort = generateEliminationFixturePort;
+        this.generateLeagueFixturePort = generateLeagueFixturePort;
         this.getFixturePort = getFixturePort;
         this.reportMatchResultPort = reportMatchResultPort;
+        this.reportLeagueMatchResultPort = reportLeagueMatchResultPort;
         this.reportRaceResultsPort = reportRaceResultsPort;
         this.getRaceResultsPort = getRaceResultsPort;
+        this.getLeagueStandingsPort = getLeagueStandingsPort;
     }
 
     @PostMapping("/organizer/{organizerId}")
@@ -225,6 +239,22 @@ public class TournamentController {
         }
     }
 
+    @PostMapping("/{id}/fixture/league")
+    public ResponseEntity<?> generateLeagueFixture(@PathVariable Long id,
+            @RequestParam(defaultValue = "false") boolean doubleRound) {
+        try {
+            generateLeagueFixturePort.generate(id, doubleRound);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                    "message", "Fixture de liga generado",
+                    "tournamentId", id,
+                    "doubleRound", doubleRound));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}/fixture")
     public ResponseEntity<?> getFixture(@PathVariable Long id) {
         try {
@@ -301,6 +331,52 @@ public class TournamentController {
                             r.getTeamName(),
                             r.getTimeMillis(),
                             r.getPosition()))
+                    .toList();
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{tournamentId}/matches/{matchId}/league-result")
+    public ResponseEntity<?> reportLeagueMatchResult(@PathVariable Long tournamentId,
+            @PathVariable Long matchId,
+            @Valid @RequestBody LeagueMatchResultRequest request) {
+        try {
+            reportLeagueMatchResultPort.reportResult(
+                    tournamentId,
+                    matchId,
+                    request.scoreHome(),
+                    request.scoreAway());
+            return ResponseEntity.ok(Map.of(
+                    "message", "Resultado de liga registrado",
+                    "tournamentId", tournamentId,
+                    "matchId", matchId));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/standings")
+    public ResponseEntity<?> getStandings(@PathVariable Long id) {
+        try {
+            List<LeagueStandingResponse> response = getLeagueStandingsPort.list(id)
+                    .stream()
+                    .map(s -> new LeagueStandingResponse(
+                            s.teamId(),
+                            s.teamName(),
+                            s.played(),
+                            s.won(),
+                            s.draw(),
+                            s.lost(),
+                            s.goalsFor(),
+                            s.goalsAgainst(),
+                            s.goalDifference(),
+                            s.points()))
                     .toList();
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {

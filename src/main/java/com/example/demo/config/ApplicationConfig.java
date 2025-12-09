@@ -16,13 +16,16 @@ import com.example.demo.core.application.usecase.ListPublicTournamentsUseCase;
 import com.example.demo.core.application.usecase.ListTournamentsByStatusUseCase;
 import com.example.demo.core.application.usecase.ListUsersUseCase;
 import com.example.demo.core.application.usecase.GenerateEliminationFixtureUseCase;
+import com.example.demo.core.application.usecase.GenerateLeagueFixtureUseCase;
 import com.example.demo.core.application.usecase.RegisterRunnerToTournamentUseCase;
 import com.example.demo.core.application.usecase.GetRaceResultsUseCase;
 import com.example.demo.core.application.usecase.ReportRaceResultsUseCase;
 import com.example.demo.core.application.usecase.RegisterTeamToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
+import com.example.demo.core.application.usecase.ReportLeagueMatchResultUseCase;
 import com.example.demo.core.application.usecase.ReportMatchResultUseCase;
+import com.example.demo.core.application.usecase.GetLeagueStandingsUseCase;
 import com.example.demo.core.application.usecase.UpdateUserUseCase;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
@@ -36,18 +39,22 @@ import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
 import com.example.demo.core.ports.in.ListUsersPort;
 import com.example.demo.core.ports.in.RegisterRunnerToTournamentPort;
+import com.example.demo.core.ports.in.GenerateLeagueFixturePort;
 import com.example.demo.core.ports.in.GetRaceResultsPort;
 import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 import com.example.demo.core.ports.in.RegisterToTournamentPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
+import com.example.demo.core.ports.in.ReportLeagueMatchResultPort;
 import com.example.demo.core.ports.in.ReportMatchResultPort;
 import com.example.demo.core.ports.in.ReportRaceResultsPort;
+import com.example.demo.core.ports.in.GetLeagueStandingsPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
 import com.example.demo.core.ports.out.DisciplineRepositoryPort;
 import com.example.demo.core.ports.out.FindTournamentsByStatusPort;
 import com.example.demo.core.ports.out.FindTournamentsPort;
 import com.example.demo.core.ports.out.FormatRepositoryPort;
 import com.example.demo.core.ports.out.FixturePersistencePort;
+import com.example.demo.core.ports.out.TeamQueryPort;
 import com.example.demo.core.ports.out.RaceResultPersistencePort;
 import com.example.demo.core.ports.out.TeamRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRegistrationPort;
@@ -152,9 +159,29 @@ public class ApplicationConfig {
     }
 
     @Bean
+    public GenerateLeagueFixturePort generateLeagueFixturePort(
+            TournamentRepositoryPort tournamentRepositoryPort,
+            FixturePersistencePort fixturePersistencePort) {
+        return new GenerateLeagueFixtureUseCase(tournamentRepositoryPort, fixturePersistencePort);
+    }
+
+    @Bean
     public ReportMatchResultPort ReportMatchResultPort(FixturePersistencePort fixturePersistencePort,
             TournamentRepositoryPort tournamentRepositoryPort) {
         return new ReportMatchResultUseCase(fixturePersistencePort, tournamentRepositoryPort);
+    }
+
+    @Bean
+    public ReportLeagueMatchResultPort reportLeagueMatchResultPort(FixturePersistencePort fixturePersistencePort,
+            TournamentRepositoryPort tournamentRepositoryPort) {
+        return new ReportLeagueMatchResultUseCase(fixturePersistencePort, tournamentRepositoryPort);
+    }
+
+    @Bean
+    public GetLeagueStandingsPort getLeagueStandingsPort(TournamentRepositoryPort tournamentRepositoryPort,
+            FixturePersistencePort fixturePersistencePort,
+            TeamQueryPort teamQueryPort) {
+        return new GetLeagueStandingsUseCase(tournamentRepositoryPort, fixturePersistencePort, teamQueryPort);
     }
 
     @Bean

@@ -46,10 +46,6 @@ public class ReportMatchResultUseCase implements ReportMatchResultPort {
             throw new IllegalStateException("El torneo no está en estado INICIADO");
         }
 
-        if (match.getStatus() != null && STATUS_FINISHED.equals(match.getStatus())) {
-            throw new IllegalStateException("El partido ya fue finalizado");
-        }
-
         // Validar que el ganador sea uno de los equipos del partido
         if (!winnerTeamId.equals(match.getHomeTeamId()) && !winnerTeamId.equals(match.getAwayTeamId())) {
             throw new IllegalArgumentException("El ganador no corresponde a los equipos del partido");
@@ -68,6 +64,8 @@ public class ReportMatchResultUseCase implements ReportMatchResultPort {
             }
         }
 
+        Long previousWinner = match.getWinnerTeamId();
+
         Date now = new Date();
         match.setScoreHome(scoreHome);
         match.setScoreAway(scoreAway);
@@ -76,12 +74,11 @@ public class ReportMatchResultUseCase implements ReportMatchResultPort {
         match.setUpdatedAt(now);
         fixturePersistencePort.saveMatch(match);
 
-        // Avanzar al siguiente partido en la ronda. Lo defino abajo en un método aparte para
-        // mayor claridad.
-        advanceToNextRound(match, winnerTeamId, now);
+        // Avanzar al siguiente partido en la ronda y ajustar si cambió el ganador.
+        advanceToNextRound(match, previousWinner, winnerTeamId, now);
     }
 
-    private void advanceToNextRound(TournamentMatch match, Long winnerTeamId, Date now) {
+    private void advanceToNextRound(TournamentMatch match, Long previousWinner, Long winnerTeamId, Date now) {
         long matchesThisRound = fixturePersistencePort.countByTournamentAndRound(match.getTournamentId(), match.getRound());
         if (matchesThisRound <= 1) {
             return; // Final: no siguiente ronda
@@ -101,6 +98,16 @@ public class ReportMatchResultUseCase implements ReportMatchResultPort {
             nextMatch.setMatchNumber(nextMatchNumber);
             nextMatch.setStatus(STATUS_PENDING);
             nextMatch.setCreatedAt(now);
+        }
+
+        boolean winnerChanged = previousWinner != null && !previousWinner.equals(winnerTeamId);
+
+        // Si el ganador cambia y el siguiente partido estaba finalizado, lo reabrimos para recalcular.
+        if (winnerChanged && STATUS_FINISHED.equals(nextMatch.getStatus())) {
+            nextMatch.setStatus(STATUS_PENDING);
+            nextMatch.setScoreHome(null);
+            nextMatch.setScoreAway(null);
+            nextMatch.setWinnerTeamId(null);
         }
 
         if (winnerGoesAsHome) {
