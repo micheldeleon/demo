@@ -25,9 +25,12 @@ import com.example.demo.adapters.in.api.mappers.TournamentMapper;
 import com.example.demo.adapters.in.api.mappers.TournamentSummaryMapper;
 import com.example.demo.adapters.in.api.dto.RegisterTeamRequest;
 import com.example.demo.adapters.in.api.dto.TournamentMatchResponse;
+import com.example.demo.adapters.in.api.dto.RaceResultRequest;
+import com.example.demo.adapters.in.api.dto.RaceResultResponse;
 import com.example.demo.core.domain.models.Tournament;
 import com.example.demo.core.domain.models.TournamentStatus;
 import com.example.demo.core.domain.models.TournamentMatch;
+import com.example.demo.core.domain.models.RaceResult;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GenerateEliminationFixturePort;
 import com.example.demo.core.ports.in.GetFixturePort;
@@ -39,6 +42,8 @@ import com.example.demo.core.ports.in.RegisterToTournamentPort;
 import com.example.demo.core.ports.in.RegisterRunnerToTournamentPort;
 import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 import com.example.demo.core.ports.in.ReportMatchResultPort;
+import com.example.demo.core.ports.in.ReportRaceResultsPort;
+import com.example.demo.core.ports.in.GetRaceResultsPort;
 
 import jakarta.validation.Valid;
 
@@ -57,6 +62,8 @@ public class TournamentController {
     private final GenerateEliminationFixturePort generateEliminationFixturePort;
     private final GetFixturePort getFixturePort;
     private final ReportMatchResultPort reportMatchResultPort;
+    private final ReportRaceResultsPort reportRaceResultsPort;
+    private final GetRaceResultsPort getRaceResultsPort;
 
     public TournamentController(CreateTournamentPort createTournamentPort,
             GetAllTournamentsPort getAllTournamentsPort,
@@ -68,7 +75,9 @@ public class TournamentController {
             RegisterTeamToTournamentPort registerTeamToTournamentPort,
             GenerateEliminationFixturePort generateEliminationFixturePort,
             GetFixturePort getFixturePort,
-            ReportMatchResultPort reportMatchResultPort) {
+            ReportMatchResultPort reportMatchResultPort,
+            ReportRaceResultsPort reportRaceResultsPort,
+            GetRaceResultsPort getRaceResultsPort) {
         this.createTournamentPort = createTournamentPort;
         this.getAllTournamentsPort = getAllTournamentsPort;
         this.getTournamentById = getTournamentById;
@@ -80,6 +89,8 @@ public class TournamentController {
         this.generateEliminationFixturePort = generateEliminationFixturePort;
         this.getFixturePort = getFixturePort;
         this.reportMatchResultPort = reportMatchResultPort;
+        this.reportRaceResultsPort = reportRaceResultsPort;
+        this.getRaceResultsPort = getRaceResultsPort;
     }
 
     @PostMapping("/organizer/{organizerId}")
@@ -252,6 +263,46 @@ public class TournamentController {
                     "message", "Resultado registrado",
                     "tournamentId", tournamentId,
                     "matchId", matchId));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/race/results")
+    public ResponseEntity<?> reportRaceResults(@PathVariable Long id,
+            Authentication authentication,
+            @Valid @RequestBody List<RaceResultRequest> request) {
+        try {
+            String organizerEmail = authentication != null ? authentication.getName() : null;
+            List<RaceResult> results = request.stream()
+                    .map(r -> new RaceResult(null, id, r.teamId(), null, r.timeMillis(), null, null, null))
+                    .toList();
+            reportRaceResultsPort.report(id, organizerEmail, results);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of(
+                            "message", "Resultados de carrera registrados",
+                            "tournamentId", id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/race/results")
+    public ResponseEntity<?> getRaceResults(@PathVariable Long id) {
+        try {
+            List<RaceResultResponse> response = getRaceResultsPort.list(id)
+                    .stream()
+                    .map(r -> new RaceResultResponse(
+                            r.getTeamId(),
+                            r.getTeamName(),
+                            r.getTimeMillis(),
+                            r.getPosition()))
+                    .toList();
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalStateException e) {

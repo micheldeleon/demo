@@ -17,6 +17,8 @@ import com.example.demo.core.application.usecase.ListTournamentsByStatusUseCase;
 import com.example.demo.core.application.usecase.ListUsersUseCase;
 import com.example.demo.core.application.usecase.GenerateEliminationFixtureUseCase;
 import com.example.demo.core.application.usecase.RegisterRunnerToTournamentUseCase;
+import com.example.demo.core.application.usecase.GetRaceResultsUseCase;
+import com.example.demo.core.application.usecase.ReportRaceResultsUseCase;
 import com.example.demo.core.application.usecase.RegisterTeamToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
@@ -34,16 +36,19 @@ import com.example.demo.core.ports.in.ListPublicTournamentsPort;
 import com.example.demo.core.ports.in.ListTournamentsByStatusPort;
 import com.example.demo.core.ports.in.ListUsersPort;
 import com.example.demo.core.ports.in.RegisterRunnerToTournamentPort;
+import com.example.demo.core.ports.in.GetRaceResultsPort;
 import com.example.demo.core.ports.in.RegisterTeamToTournamentPort;
 import com.example.demo.core.ports.in.RegisterToTournamentPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
 import com.example.demo.core.ports.in.ReportMatchResultPort;
+import com.example.demo.core.ports.in.ReportRaceResultsPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
 import com.example.demo.core.ports.out.DisciplineRepositoryPort;
 import com.example.demo.core.ports.out.FindTournamentsByStatusPort;
 import com.example.demo.core.ports.out.FindTournamentsPort;
 import com.example.demo.core.ports.out.FormatRepositoryPort;
 import com.example.demo.core.ports.out.FixturePersistencePort;
+import com.example.demo.core.ports.out.RaceResultPersistencePort;
 import com.example.demo.core.ports.out.TeamRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRepositoryPort;
@@ -155,5 +160,18 @@ public class ApplicationConfig {
     @Bean
     public GetUserByIdAndEmailPort getUserByIdAndEmailPort(UserRepositoryPort userRepositoryPort) {
         return new GetUserByIdAndEmailUseCase(userRepositoryPort);
+    }
+
+    @Bean
+    public ReportRaceResultsPort reportRaceResultsPort(TournamentRepositoryPort tournamentRepositoryPort,
+            RaceResultPersistencePort raceResultPersistencePort,
+            UserRepositoryPort userRepositoryPort) {
+        return new ReportRaceResultsUseCase(tournamentRepositoryPort, raceResultPersistencePort, userRepositoryPort);
+    }
+
+    @Bean
+    public GetRaceResultsPort getRaceResultsPort(TournamentRepositoryPort tournamentRepositoryPort,
+            RaceResultPersistencePort raceResultPersistencePort) {
+        return new GetRaceResultsUseCase(tournamentRepositoryPort, raceResultPersistencePort);
     }
 }
