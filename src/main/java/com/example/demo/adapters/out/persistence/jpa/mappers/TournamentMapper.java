@@ -92,6 +92,7 @@ public class TournamentMapper {
         if (entity.getStatus() != null) {
             tournament.setStatus(TournamentStatus.valueOf(entity.getStatus()));
         }
+        tournament.setTeamsInscribed(entity.getTeamsInscribed());
         return tournament;
     }
 

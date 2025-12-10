@@ -60,4 +60,11 @@ public class TournamentRepository implements TournamentRepositoryPort {
         return tournaments;
     }
 
+    @Override
+    public Tournament update(Tournament tournament) {
+        TournamentJpaEntity entity = TournamentMapper.mapToEntity(tournament, tournament.getOrganizer().getId());
+        entity = tournamentRepositoryJpa.save(entity);
+        return TournamentMapper.mapToDomain(entity);
+    }
+
 }

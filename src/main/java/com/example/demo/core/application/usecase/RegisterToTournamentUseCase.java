@@ -44,5 +44,12 @@ public class RegisterToTournamentUseCase implements RegisterToTournamentPort {
         }
 
         tournamentRegistrationPort.register(tournamentId, userId);
+
+        // 👉 SUMAR +1 a teamsInscribed
+        int current = tournament.getTeamsInscribed();
+        tournament.setTeamsInscribed(current + 1);
+
+        // 👉 Guardar cambios del torneo
+        tournamentRepositoryPort.save(tournament, tournament.getOrganizer().getId());
     }
 }

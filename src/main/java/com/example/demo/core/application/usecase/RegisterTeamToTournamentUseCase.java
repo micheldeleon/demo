@@ -50,6 +50,16 @@ public class RegisterTeamToTournamentUseCase implements RegisterTeamToTournament
         }
 
         Long disciplineId = tournament.getDiscipline() != null ? tournament.getDiscipline().getId() : null;
+
+        // 👉 Registrar el equipo
         teamRegistrationPort.registerTeam(tournamentId, userId, teamName, disciplineId, participants);
+
+        // 👉 SUMAR +1 a teamsInscribed
+        int current = tournament.getTeamsInscribed();
+        tournament.setTeamsInscribed(current + 1);
+
+        // 👉 Guardar cambios del torneo
+        tournamentRepositoryPort.save(tournament, tournament.getOrganizer().getId());
     }
+
 }

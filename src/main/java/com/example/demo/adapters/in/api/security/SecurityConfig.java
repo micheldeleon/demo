@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/tournaments/status").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/tournaments/*/register").hasRole("USER")
                 .requestMatchers(HttpMethod.POST, "/api/tournaments/*/register/runner").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/tournaments/*/register/team").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/api/tournaments/*/register/team").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/tournaments/*/fixture/elimination").hasRole("ORGANIZER")
                 .requestMatchers(HttpMethod.POST, "/api/tournaments/*/fixture/league").hasRole("ORGANIZER")
                 .requestMatchers(HttpMethod.GET, "/api/tournaments/*/fixture").permitAll()

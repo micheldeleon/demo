@@ -7,6 +7,8 @@ import com.example.demo.core.domain.models.Tournament;
 public interface TournamentRepositoryPort {
     Tournament save(Tournament tournament, Long organizerId);
 
+    Tournament update(Tournament tournament);
+
     Tournament findById(Long id);
 
     List<Tournament> findAll();
