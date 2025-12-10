@@ -22,6 +22,7 @@ import com.example.demo.core.ports.in.GetUserByIdPort;
 import com.example.demo.core.ports.in.GetUserByIdAndEmailPort;
 import com.example.demo.core.ports.in.ListUsersPort;
 import com.example.demo.core.ports.in.RegisterUserPort;
+import com.example.demo.core.ports.in.ToOrganizerPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
 
 import jakarta.validation.Valid;
@@ -35,14 +36,16 @@ public class UserController {
     private final UpdateProfilePort updateProfilePort;
     private final GetUserByIdAndEmailPort getUserByIdAndEmailPort;
     private final GetUserByIdPort getUserByIdPort;
-
+    private final ToOrganizerPort toOrganizerPort;
     public UserController(ListUsersPort listUsersPort, RegisterUserPort registerUserPort,
-            UpdateProfilePort updateProfilePort, GetUserByIdAndEmailPort getUserPort, GetUserByIdPort getUserByIdPort) {
+            UpdateProfilePort updateProfilePort, GetUserByIdAndEmailPort getUserPort, GetUserByIdPort getUserByIdPort,
+            ToOrganizerPort toOrganizerPort) {
         this.listUsersPort = listUsersPort;
         this.registerUserPort = registerUserPort;
         this.updateProfilePort = updateProfilePort;
         this.getUserByIdAndEmailPort = getUserPort;
         this.getUserByIdPort = getUserByIdPort;
+        this.toOrganizerPort = toOrganizerPort;
     }
 
     @GetMapping
@@ -106,6 +109,16 @@ public class UserController {
         try {
             List<Tournament> tournaments = this.getUserByIdAndEmailPort.getUserByIdAndEmail(id, Email).getTournaments();
             return ResponseEntity.ok(tournaments);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+     @PostMapping(value = "/organizer")
+    public ResponseEntity<?> toOrganizer(
+            @RequestParam Long id) {
+        try {
+            toOrganizerPort.toOrganizer(id);
+            return ResponseEntity.ok("Exito");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

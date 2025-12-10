@@ -86,4 +86,15 @@ public class UserRepository implements UserRepositoryPort {
         lastUser.profileUpdate(user);
         userRepositoryJpa.save(UserMapper.toEntity(lastUser));
     }
+
+    @Override
+    public void addRole(Long userId, String roleName) {
+        UserEntity userEntity = userRepositoryJpa.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        RoleEntity roleEntity = roleRepositoryJpa.findByName(roleName).orElseThrow(() -> new IllegalArgumentException("Role not found"));
+        if (!userEntity.getRoles().contains(roleEntity)) {
+            userEntity.getRoles().add(roleEntity);
+            userRepositoryJpa.save(userEntity);
+        }
+    }
+    
 }

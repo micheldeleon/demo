@@ -8,4 +8,5 @@ public interface UserRepositoryPort extends RepositoryPort<User, Long> {
     Optional<User> findByEmail(String email);
 
     void update(User user);
+    void addRole(Long userId, String roleName);
 }

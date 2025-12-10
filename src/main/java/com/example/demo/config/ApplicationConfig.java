@@ -20,6 +20,7 @@ import com.example.demo.core.application.usecase.GenerateLeagueFixtureUseCase;
 import com.example.demo.core.application.usecase.RegisterRunnerToTournamentUseCase;
 import com.example.demo.core.application.usecase.GetRaceResultsUseCase;
 import com.example.demo.core.application.usecase.ReportRaceResultsUseCase;
+import com.example.demo.core.application.usecase.ToOrganizerUseCase;
 import com.example.demo.core.application.usecase.RegisterTeamToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterToTournamentUseCase;
 import com.example.demo.core.application.usecase.RegisterUserUseCase;
@@ -47,6 +48,7 @@ import com.example.demo.core.ports.in.RegisterUserPort;
 import com.example.demo.core.ports.in.ReportLeagueMatchResultPort;
 import com.example.demo.core.ports.in.ReportMatchResultPort;
 import com.example.demo.core.ports.in.ReportRaceResultsPort;
+import com.example.demo.core.ports.in.ToOrganizerPort;
 import com.example.demo.core.ports.in.GetLeagueStandingsPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
 import com.example.demo.core.ports.out.DisciplineRepositoryPort;
@@ -200,5 +202,9 @@ public class ApplicationConfig {
     public GetRaceResultsPort getRaceResultsPort(TournamentRepositoryPort tournamentRepositoryPort,
             RaceResultPersistencePort raceResultPersistencePort) {
         return new GetRaceResultsUseCase(tournamentRepositoryPort, raceResultPersistencePort);
+    }
+    @Bean
+    public ToOrganizerPort ToOrganizerPort(UserRepositoryPort userRepositoryPort) {
+        return new ToOrganizerUseCase(userRepositoryPort);
     }
 }
