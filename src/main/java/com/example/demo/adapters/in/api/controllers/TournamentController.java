@@ -49,6 +49,8 @@ import com.example.demo.core.ports.in.ReportRaceResultsPort;
 import com.example.demo.core.ports.in.GetRaceResultsPort;
 import com.example.demo.core.ports.in.ReportLeagueMatchResultPort;
 import com.example.demo.core.ports.in.GetLeagueStandingsPort;
+import com.example.demo.core.ports.out.TeamQueryPort;
+import com.example.demo.adapters.in.api.dto.TeamSummaryDto;
 
 import jakarta.validation.Valid;
 
@@ -72,6 +74,7 @@ public class TournamentController {
     private final ReportRaceResultsPort reportRaceResultsPort;
     private final GetRaceResultsPort getRaceResultsPort;
     private final GetLeagueStandingsPort getLeagueStandingsPort;
+    private final TeamQueryPort teamQueryPort;
 
     public TournamentController(CreateTournamentPort createTournamentPort,
             GetAllTournamentsPort getAllTournamentsPort,
@@ -88,7 +91,8 @@ public class TournamentController {
             ReportLeagueMatchResultPort reportLeagueMatchResultPort,
             ReportRaceResultsPort reportRaceResultsPort,
             GetRaceResultsPort getRaceResultsPort,
-            GetLeagueStandingsPort getLeagueStandingsPort) {
+            GetLeagueStandingsPort getLeagueStandingsPort,
+            TeamQueryPort teamQueryPort) {
         this.createTournamentPort = createTournamentPort;
         this.getAllTournamentsPort = getAllTournamentsPort;
         this.getTournamentById = getTournamentById;
@@ -105,6 +109,7 @@ public class TournamentController {
         this.reportRaceResultsPort = reportRaceResultsPort;
         this.getRaceResultsPort = getRaceResultsPort;
         this.getLeagueStandingsPort = getLeagueStandingsPort;
+        this.teamQueryPort = teamQueryPort;
     }
 
     @PostMapping("/organizer/{organizerId}")
@@ -259,14 +264,22 @@ public class TournamentController {
     public ResponseEntity<?> getFixture(@PathVariable Long id) {
         try {
             List<TournamentMatch> matches = getFixturePort.getFixture(id);
+            
+            // Obtener todos los equipos del torneo
+            List<TeamQueryPort.TeamSummary> teams = teamQueryPort.findTeamsByTournament(id);
+            Map<Long, TeamQueryPort.TeamSummary> teamMap = teams.stream()
+                    .collect(java.util.stream.Collectors.toMap(
+                            TeamQueryPort.TeamSummary::id,
+                            team -> team));
+            
             List<TournamentMatchResponse> response = matches.stream()
                     .map(m -> new TournamentMatchResponse(
                             m.getId(),
                             m.getRound(),
                             m.getMatchNumber(),
-                            m.getHomeTeamId(),
-                            m.getAwayTeamId(),
-                            m.getWinnerTeamId(),
+                            mapToTeamDto(teamMap.get(m.getHomeTeamId())),
+                            mapToTeamDto(teamMap.get(m.getAwayTeamId())),
+                            mapToTeamDto(teamMap.get(m.getWinnerTeamId())),
                             m.getStatus(),
                             m.getScoreHome(),
                             m.getScoreAway(),
@@ -276,6 +289,10 @@ public class TournamentController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+    
+    private TeamSummaryDto mapToTeamDto(TeamQueryPort.TeamSummary team) {
+        return team != null ? new TeamSummaryDto(team.id(), team.name()) : null;
     }
 
     @PostMapping("/{tournamentId}/matches/{matchId}/result")
