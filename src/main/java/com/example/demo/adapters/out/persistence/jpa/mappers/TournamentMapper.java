@@ -53,6 +53,7 @@ public class TournamentMapper {
         e.setPrize(t.getPrize());
         e.setRegistrationCost(BigDecimal.valueOf(t.getRegistrationCost()));
         e.setStatus(t.getStatus() != null ? t.getStatus().name() : null);
+        e.setTeamsInscribed(t.getTeamsInscribed());
 
         return e;
     }
@@ -65,7 +66,8 @@ public class TournamentMapper {
         Tournament tournament = new Tournament();
         tournament.setId(entity.getId());
         tournament.setTeams(new ArrayList<>());
-        tournament.setDiscipline(entity.getDiscipline() != null ? DisciplineMapper.toDomain(entity.getDiscipline()) : null);
+        tournament.setDiscipline(
+                entity.getDiscipline() != null ? DisciplineMapper.toDomain(entity.getDiscipline()) : null);
         tournament.setFormat(entity.getFormat() != null ? FormatMapper.toDomain(entity.getFormat()) : null);
         tournament.setName(entity.getName());
         tournament.setCreatedAt(fromOdt(entity.getCreatedAt()));
@@ -92,7 +94,9 @@ public class TournamentMapper {
         if (entity.getStatus() != null) {
             tournament.setStatus(TournamentStatus.valueOf(entity.getStatus()));
         }
-        tournament.setTeamsInscribed(entity.getTeamsInscribed());
+        tournament.setTeamsInscribed(
+                entity.getTeamsInscribed() != null ? entity.getTeamsInscribed() : 0);
+
         return tournament;
     }
 
