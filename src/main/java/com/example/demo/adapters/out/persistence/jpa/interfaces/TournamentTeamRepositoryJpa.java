@@ -10,4 +10,6 @@ import com.example.demo.adapters.out.persistence.jpa.entities.TournamentTeamKey;
 public interface TournamentTeamRepositoryJpa extends JpaRepository<TournamentTeamEntity, TournamentTeamKey> {
 
     java.util.List<TournamentTeamEntity> findByTournamentId(Long tournamentId);
+
+    void deleteByTournamentId(Long tournamentId);
 }

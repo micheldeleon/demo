@@ -28,6 +28,7 @@ import com.example.demo.core.application.usecase.ReportLeagueMatchResultUseCase;
 import com.example.demo.core.application.usecase.ReportMatchResultUseCase;
 import com.example.demo.core.application.usecase.GetLeagueStandingsUseCase;
 import com.example.demo.core.application.usecase.UpdateUserUseCase;
+import com.example.demo.core.application.usecase.CancelTournamentUseCase;
 import com.example.demo.core.ports.in.CreateTournamentPort;
 import com.example.demo.core.ports.in.GetAllTournamentsPort;
 import com.example.demo.core.ports.in.GetTournamentByIdPort;
@@ -51,6 +52,7 @@ import com.example.demo.core.ports.in.ReportRaceResultsPort;
 import com.example.demo.core.ports.in.ToOrganizerPort;
 import com.example.demo.core.ports.in.GetLeagueStandingsPort;
 import com.example.demo.core.ports.in.UpdateProfilePort;
+import com.example.demo.core.ports.in.CancelTournamentPort;
 import com.example.demo.core.ports.out.DisciplineRepositoryPort;
 import com.example.demo.core.ports.out.FindTournamentsByStatusPort;
 import com.example.demo.core.ports.out.FindTournamentsPort;
@@ -62,6 +64,7 @@ import com.example.demo.core.ports.out.TeamRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRegistrationPort;
 import com.example.demo.core.ports.out.TournamentRepositoryPort;
 import com.example.demo.core.ports.out.UserRepositoryPort;
+import com.example.demo.core.ports.out.TournamentCleanupPort;
 
 @Configuration
 public class ApplicationConfig {
@@ -142,6 +145,14 @@ public class ApplicationConfig {
     public RegisterTeamToTournamentPort RegisterTeamToTournamentPort(TournamentRepositoryPort tournamentRepositoryPort,
             TeamRegistrationPort teamRegistrationPort) {
         return new RegisterTeamToTournamentUseCase(tournamentRepositoryPort, teamRegistrationPort);
+    }
+
+    @Bean
+    public CancelTournamentPort cancelTournamentPort(
+            TournamentRepositoryPort tournamentRepositoryPort,
+            TournamentCleanupPort tournamentCleanupPort,
+            UserRepositoryPort userRepositoryPort) {
+        return new CancelTournamentUseCase(tournamentRepositoryPort, tournamentCleanupPort, userRepositoryPort);
     }
 
     @Bean

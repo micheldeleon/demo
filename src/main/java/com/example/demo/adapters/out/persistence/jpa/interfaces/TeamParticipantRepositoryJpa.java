@@ -10,4 +10,6 @@ import com.example.demo.adapters.out.persistence.jpa.entities.TeamParticipantKey
 public interface TeamParticipantRepositoryJpa extends JpaRepository<TeamParticipantEntity, TeamParticipantKey> {
 
     boolean existsByParticipantIdAndTeamIdIn(Long participantId, java.util.List<Long> teamIds);
+
+    void deleteByTeamIdIn(java.util.List<Long> teamIds);
 }
