@@ -54,6 +54,7 @@ public class TournamentMapper {
         e.setRegistrationCost(BigDecimal.valueOf(t.getRegistrationCost()));
         e.setStatus(t.getStatus() != null ? t.getStatus().name() : null);
         e.setTeamsInscribed(t.getTeamsInscribed());
+        e.setIsDoubleRound(t.getIsDoubleRound());
 
         return e;
     }
@@ -96,6 +97,7 @@ public class TournamentMapper {
         }
         tournament.setTeamsInscribed(
                 entity.getTeamsInscribed() != null ? entity.getTeamsInscribed() : 0);
+        tournament.setIsDoubleRound(entity.getIsDoubleRound());
 
         return tournament;
     }

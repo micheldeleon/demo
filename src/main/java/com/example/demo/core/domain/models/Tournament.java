@@ -34,6 +34,7 @@ public class Tournament { // Torneo
     private int minParticipantsPerTournament; // cantMinParticipantesXTorneo
     private int maxParticipantsPerTournament; // cantMaxParticipantesXTorneo
     private TournamentStatus status; // estado
+    private Boolean isDoubleRound; // Para formato liga: indica si es a doble ronda (ida y vuelta)
     // Factory principal para crear torneos sanos
 
     public static Tournament create(Tournament t) {

@@ -10,6 +10,7 @@ public record TournamentResponse(
     Format format,
     Discipline discipline,
     String name,
+    boolean isDoubleRound,
     Date createdAt,
     Date startAt,
     Date endAt,
