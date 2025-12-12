@@ -56,11 +56,11 @@ public class UserRepository implements UserRepositoryPort {
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         DepartmentEntity dep = departmentRepositoryJpa.findById(0L).get();
         entity.setDepartment(DepartmentMapper.toDomain(dep));
-        UserEntity userEntity = UserMapper
-                .toEntity(entity);
         Optional<RoleEntity> userRole = roleRepositoryJpa.findByName("ROLE_USER");
         List<RoleEntity> roles = new ArrayList<>();
         userRole.ifPresent(roles::add);
+        UserEntity userEntity = UserMapper
+                .toEntity(entity, roles);
         userEntity.setRoles(roles);
         // departmentRepositoryJpa.findById(0);
         userRepositoryJpa.save(userEntity);
@@ -84,7 +84,8 @@ public class UserRepository implements UserRepositoryPort {
     public void update(User user) {
         User lastUser = findByEmail(user.getEmail()).get();
         lastUser.profileUpdate(user);
-        userRepositoryJpa.save(UserMapper.toEntity(lastUser));
+        List<RoleEntity> roles = userRepositoryJpa.findById(lastUser.getId()).get().getRoles();
+        userRepositoryJpa.save(UserMapper.toEntity(lastUser, roles));
     }
 
     @Override

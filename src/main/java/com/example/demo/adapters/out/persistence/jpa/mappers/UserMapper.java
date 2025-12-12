@@ -1,10 +1,13 @@
 package com.example.demo.adapters.out.persistence.jpa.mappers;
 
+import java.util.List;
+
+import com.example.demo.adapters.out.persistence.jpa.entities.RoleEntity;
 import com.example.demo.adapters.out.persistence.jpa.entities.UserEntity;
 import com.example.demo.core.domain.models.User;
 
 public class UserMapper {
-    public static UserEntity toEntity(User user) {
+    public static UserEntity toEntity(User user, List<RoleEntity> roles) {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(user.getId());
         userEntity.setName(user.getName());
@@ -16,6 +19,7 @@ public class UserMapper {
         userEntity.setPhoneNumber(user.getPhoneNumber());
         userEntity.setAddress(user.getAddress());
         userEntity.setDepartment(DepartmentMapper.toEntity(user.getDepartment()));
+        userEntity.setRoles(roles);
         return userEntity;
     }
 
